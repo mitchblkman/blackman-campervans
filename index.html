@@ -219,7 +219,7 @@ function setup() {
   scene.fog = new THREE.Fog(0x1A140C, 18, 45);
 
   camera = new THREE.PerspectiveCamera(42, w / h, 0.01, 200);
-  target = new THREE.Vector3(0, 1.1, 0);
+  target = new THREE.Vector3(0, 0.8, 0);
 
   scene.add(new THREE.AmbientLight(0xfff8e8, 0.7));
   var sun = new THREE.DirectionalLight(0xffe8c0, 2.2);
@@ -280,47 +280,48 @@ function loadGLB() {
   new THREE.GLTFLoader().load('van_exterior.glb',
     function(gltf) {
       var mdl = gltf.scene;
-      mdl.traverse(function(c) {
-        if (c.isMesh) { c.castShadow = true; c.receiveShadow = true; }
-      });
-      // Fix orientation - Blender exports Z-up, Three.js is Y-up
-      mdl.rotation.x = -Math.PI / 2;
 
-      // Auto-scale and centre
+      // Step 1: measure BEFORE any transform (fast - just reads geometry bounds)
       var box = new THREE.Box3().setFromObject(mdl);
       var size = box.getSize(new THREE.Vector3());
+      var centre = box.getCenter(new THREE.Vector3());
+
+      // Step 2: scale to fit 5 units using the longest axis
       var maxDim = Math.max(size.x, size.y, size.z);
       var scl = 5.0 / maxDim;
-      mdl.scale.set(scl, scl, scl);
-      box.setFromObject(mdl);
-      var centre = box.getCenter(new THREE.Vector3());
-      mdl.position.x -= centre.x;
-      mdl.position.z -= centre.z;
-      mdl.position.y -= box.min.y;
-      mdl.rotation.y = Math.PI * 0.12;
 
-      // Apply colours from material names since GLB colour export is grey
+      // Step 3: centre at origin, sit on ground
+      mdl.position.set(-centre.x * scl, -box.min.y * scl, -centre.z * scl);
+      mdl.scale.set(scl, scl, scl);
+
+      // Step 4: Blender GLB = Z-up, rotate to Y-up + face camera nicely
+      // Apply rotations separately to avoid gimbal lean
+      mdl.rotation.x = -Math.PI / 2;
+      mdl.rotation.y = 0;
+      mdl.rotation.z = 0;
+
+      // Step 5: colours from material names
       mdl.traverse(function(c) {
         if (!c.isMesh) return;
+        c.castShadow = true;
+        c.receiveShadow = true;
         var n = c.material ? (c.material.name || '') : '';
         var nl = n.toLowerCase();
         var col = null;
-        if (nl.indexOf('white') > -1) col = 0xF5F5F5;
-        else if (nl.indexOf('black') > -1) col = 0x111111;
+        if (nl.indexOf('white') > -1) col = 0xF2F2F2;
+        else if (nl.indexOf('black') > -1 || nl.indexOf('oxide') > -1) col = 0x151515;
         else if (nl.indexOf('oak') > -1) col = 0xC4945A;
         else if (nl.indexOf('mahogany') > -1 || nl.indexOf('bamboo') > -1) col = 0xC8A96E;
         else if (nl.indexOf('steel') > -1 || nl.indexOf('satin') > -1) col = 0xAAAAAA;
-        else if (nl.indexOf('oxide') > -1) col = 0x222222;
         else if (nl.indexOf('blue') > -1) col = 0x4A6FA5;
-        else if (n.indexOf('Opaque(255') > -1) col = 0xF5F5F5;
-        else if (n.indexOf('Opaque(26') > -1 || n.indexOf('Opaque(51') > -1 || n.indexOf('5,5,5') > -1 || n.indexOf('20,20,20') > -1) col = 0x111111;
-        else if (n.indexOf('238,238,238') > -1 || n.indexOf('240,240,240') > -1 || n.indexOf('245,245,245') > -1) col = 0xEEEEEE;
-        else if (n.indexOf('188,75,0') > -1) col = 0xBC4B00;
+        else if (n.indexOf('Opaque(255') > -1) col = 0xF2F2F2;
+        else if (n.indexOf('Opaque(26') > -1 || n.indexOf('Opaque(51') > -1) col = 0x151515;
+        else if (n.indexOf('245,245,245') > -1 || n.indexOf('240,240,240') > -1) col = 0xEEEEEE;
         if (col !== null) {
           c.material = c.material.clone();
           c.material.color.setHex(col);
-          c.material.roughness = nl.indexOf('gloss') > -1 ? 0.15 : 0.6;
-          c.material.metalness = nl.indexOf('steel') > -1 || nl.indexOf('metal') > -1 ? 0.8 : 0.0;
+          c.material.roughness = nl.indexOf('gloss') > -1 ? 0.2 : 0.65;
+          c.material.metalness = nl.indexOf('steel') > -1 ? 0.8 : 0.0;
           c.material.needsUpdate = true;
         }
       });
