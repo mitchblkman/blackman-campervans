@@ -7,33 +7,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@300;400;600&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --earth:#2C2415;--moss:#5C6B3A;--sand:#C8B89A;--cream:#F2EDE4;
-  --rust:#C4622D;--white:#FDFAF6;--gold:#D4A853;--dark:#1A140C;
-}
+:root{--earth:#2C2415;--moss:#5C6B3A;--sand:#C8B89A;--cream:#F2EDE4;--rust:#C4622D;--white:#FDFAF6;--gold:#D4A853;--dark:#1A140C}
 html{scroll-behavior:smooth}
 body{background:var(--earth);color:var(--cream);font-family:'Barlow',sans-serif;font-weight:300;overflow-x:hidden}
-
-/* NAV */
-#nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:1rem 2rem;
-  background:rgba(26,20,12,0.97);
-  border-bottom:1px solid rgba(212,168,83,0.15);
-}
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(26,20,12,0.97);border-bottom:1px solid rgba(212,168,83,0.15)}
 .logo{font-family:'Playfair Display',serif;font-size:1rem;letter-spacing:0.14em;color:var(--gold)}
 .logo em{font-style:italic;color:var(--moss)}
 .nav-links{display:flex;gap:2rem;list-style:none}
 .nav-links a{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(200,184,154,0.55);text-decoration:none;transition:color 0.2s}
 .nav-links a:hover{color:var(--white)}
-
-/* HERO */
-#hero{
-  height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  position:relative;overflow:hidden;
-  background:radial-gradient(ellipse 80% 60% at 50% 70%,rgba(92,107,58,0.18) 0%,transparent 60%),#2C2415;
-}
+#hero{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;background:radial-gradient(ellipse 80% 60% at 50% 70%,rgba(92,107,58,0.18) 0%,transparent 60%),#2C2415}
 .terrain{position:absolute;bottom:0;left:0;right:0;height:35%;pointer-events:none}
 .hero-content{position:relative;z-index:2;text-align:center;padding:0 2rem}
 .eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;opacity:0;animation:fadeUp 1s ease 0.3s forwards}
@@ -42,48 +25,29 @@ body{background:var(--earth);color:var(--cream);font-family:'Barlow',sans-serif;
 .hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1rem,2.5vw,1.4rem);letter-spacing:0.22em;text-transform:uppercase;color:var(--sand);margin-bottom:2.8rem;opacity:0;animation:fadeUp 1s ease 0.75s forwards}
 .cta-wrap{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp 1s ease 1s forwards}
 .btn{font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;letter-spacing:0.22em;text-transform:uppercase;padding:0.85rem 2.2rem;text-decoration:none;transition:all 0.3s;border:none;cursor:pointer}
-.btn-primary{background:var(--rust);color:var(--white)}
-.btn-primary:hover{background:#d4703d}
-.btn-outline{background:transparent;color:var(--sand);border:1px solid rgba(200,184,154,0.4)}
-.btn-outline:hover{border-color:var(--sand);color:var(--white)}
+.btn-primary{background:var(--rust);color:var(--white)}.btn-primary:hover{background:#d4703d}
+.btn-outline{background:transparent;color:var(--sand);border:1px solid rgba(200,184,154,0.4)}.btn-outline:hover{border-color:var(--sand);color:var(--white)}
 .scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:0.5rem;opacity:0;animation:fadeUp 1s ease 1.5s forwards}
 .scroll-hint span{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(200,184,154,0.5)}
 .scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(200,184,154,0.5),transparent);animation:scrollPulse 2s ease-in-out infinite}
-
-/* VIEWER */
 #viewer{background:#231D10;padding:5rem 0 0}
 .section-label{font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:1rem}
 .section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);text-align:center;color:var(--white);margin-bottom:1rem}
 .section-desc{text-align:center;color:var(--sand);font-size:0.95rem;max-width:480px;margin:0 auto 2rem;line-height:1.7}
-
-
-
-#canvas-wrap{position:relative;width:92%;max-width:1000px;margin:0 auto;background:var(--dark);border:1px solid rgba(212,168,83,0.1);overflow:hidden}
-#canvas-wrap canvas{display:block;width:100%;height:560px;cursor:grab;min-height:560px}
-#canvas-wrap canvas:active{cursor:grabbing}
-.vpane{position:absolute;inset:0;transition:opacity 0.35s,transform 0.35s}
-.vpane.hidden{opacity:0;pointer-events:none;transform:translateX(20px)}
-.vpane.hidden.left{transform:translateX(-20px)}
-#pane-ext{position:relative}
-.vcontrols{
-  position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);
-  display:flex;align-items:center;gap:1rem;
-  background:rgba(26,20,12,0.9);backdrop-filter:blur(8px);
-  padding:0.6rem 1.4rem;border:1px solid rgba(200,184,154,0.12);z-index:5;white-space:nowrap
-}
+#canvas-wrap{position:relative;width:92%;max-width:1000px;margin:0 auto;background:var(--dark);border:1px solid rgba(212,168,83,0.1);overflow:hidden;height:560px}
+#cv-ext{display:block;width:100%;height:560px;cursor:grab}
+#cv-ext:active{cursor:grabbing}
+.vcontrols{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:0.6rem;background:rgba(26,20,12,0.9);backdrop-filter:blur(8px);padding:0.6rem 1.2rem;border:1px solid rgba(200,184,154,0.12);z-index:5;white-space:nowrap}
 .vh{font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(200,184,154,0.45)}
 .vs{width:1px;height:13px;background:rgba(200,184,154,0.18)}
 .cb{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.32rem 0.85rem;cursor:pointer;border:1px solid rgba(200,184,154,0.22);background:transparent;color:var(--sand);transition:all 0.2s}
-.cb:hover{background:rgba(200,184,154,0.1);color:var(--white)}
-.cb.on{background:var(--rust);border-color:var(--rust);color:var(--white)}
-.load-ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--dark);z-index:8;gap:1.2rem;transition:opacity 0.4s}
-.load-ov.gone{opacity:0;pointer-events:none}
+.cb:hover{background:rgba(200,184,154,0.1);color:var(--white)}.cb.on{background:var(--rust);border-color:var(--rust);color:var(--white)}
+#ov-ext{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--dark);z-index:8;gap:1.2rem;transition:opacity 0.4s}
+#ov-ext.gone{opacity:0;pointer-events:none}
 .load-sub{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold)}
 .load-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--cream)}
 .load-track{width:200px;height:1px;background:rgba(200,184,154,0.1)}
-.load-fill{height:100%;background:var(--gold);width:0%;transition:width 0.3s}
-
-/* SPECS */
+#fill-ext{height:100%;background:var(--gold);width:0%;transition:width 0.3s}
 #specs{padding:7rem 4rem;background:var(--earth)}
 .specs-grid{max-width:1100px;margin:4rem auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));border:1px solid rgba(200,184,154,0.1)}
 .spec-item{padding:2.5rem 2rem;border-right:1px solid rgba(200,184,154,0.1);border-bottom:1px solid rgba(200,184,154,0.1);transition:background 0.3s}
@@ -91,8 +55,6 @@ body{background:var(--earth);color:var(--cream);font-family:'Barlow',sans-serif;
 .spec-num{font-family:'Playfair Display',serif;font-size:2.8rem;color:var(--gold);line-height:1;margin-bottom:0.4rem}
 .spec-unit{font-size:1rem;color:var(--moss)}
 .spec-lbl{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(200,184,154,0.5)}
-
-/* FEATURES */
 #features{padding:7rem 4rem;background:#231D10}
 .feat-grid{max-width:1100px;margin:4rem auto 0;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(200,184,154,0.07)}
 .feat-card{background:#231D10;padding:3rem 2.5rem;transition:background 0.3s;position:relative;overflow:hidden}
@@ -102,8 +64,6 @@ body{background:var(--earth);color:var(--cream);font-family:'Barlow',sans-serif;
 .feat-num{font-family:'Playfair Display',serif;font-size:0.85rem;color:rgba(212,168,83,0.4);margin-bottom:1.5rem;font-style:italic}
 .feat-title{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--white);margin-bottom:1rem}
 .feat-desc{font-size:0.9rem;line-height:1.75;color:rgba(200,184,154,0.65)}
-
-/* PROCESS */
 #process{padding:7rem 4rem;background:var(--earth);text-align:center}
 .proc-steps{max-width:900px;margin:5rem auto 0;position:relative}
 .proc-line{position:absolute;top:28px;left:10%;right:10%;height:1px;background:rgba(200,184,154,0.1)}
@@ -113,37 +73,29 @@ body{background:var(--earth);color:var(--cream);font-family:'Barlow',sans-serif;
 .proc-step:hover .step-dot{background:var(--rust);border-color:var(--rust);color:var(--white)}
 .step-title{font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--cream);margin-bottom:0.6rem}
 .step-desc{font-size:0.82rem;color:rgba(200,184,154,0.5);line-height:1.6}
-
-/* CTA */
 #cta{padding:9rem 4rem;background:#231D10;text-align:center;position:relative;overflow:hidden}
 #cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(196,98,45,0.1) 0%,transparent 70%)}
 .cta-title{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,5vw,4.5rem);color:var(--white);margin-bottom:1.5rem;position:relative;z-index:1}
 .cta-title em{color:var(--rust)}
 .cta-sub{font-size:1rem;color:rgba(200,184,154,0.6);margin-bottom:3rem;position:relative;z-index:1;max-width:400px;margin-left:auto;margin-right:auto}
 .cta-acts{display:flex;justify-content:center;gap:1rem;position:relative;z-index:1;flex-wrap:wrap}
-
-/* FOOTER */
 footer{padding:2rem 4rem;background:var(--earth);border-top:1px solid rgba(200,184,154,0.08);display:flex;justify-content:space-between;align-items:center}
 .footer-logo{font-family:'Playfair Display',serif;font-size:0.9rem;color:var(--gold);letter-spacing:0.1em}
 .footer-txt{font-size:0.78rem;color:rgba(200,184,154,0.35);font-family:'Barlow Condensed',sans-serif;letter-spacing:0.1em}
-
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @keyframes scrollPulse{0%,100%{opacity:0.4}50%{opacity:0.9}}
-
 @media(max-width:768px){
-  #nav{padding:0.8rem 1.2rem}
-  .nav-links{display:none}
+  #nav{padding:0.8rem 1.2rem}.nav-links{display:none}
   #specs,#features,#process,#cta{padding:5rem 1.5rem}
   .feat-grid{grid-template-columns:1fr}
-  .proc-track{grid-template-columns:repeat(2,1fr)}
-  .proc-line{display:none}
+  .proc-track{grid-template-columns:repeat(2,1fr)}.proc-line{display:none}
   footer{flex-direction:column;gap:0.5rem;text-align:center}
-  #canvas-wrap canvas{height:360px}
+  #canvas-wrap{height:360px}#cv-ext{height:360px}
+  .vcontrols{gap:0.3rem;padding:0.5rem 0.7rem}
 }
 </style>
 </head>
 <body>
-
 <nav id="nav">
   <div class="logo">Blackman <em>Campervans</em></div>
   <ul class="nav-links">
@@ -153,7 +105,6 @@ footer{padding:2rem 4rem;background:var(--earth);border-top:1px solid rgba(200,1
     <li><a href="#cta">Order</a></li>
   </ul>
 </nav>
-
 <section id="hero">
   <svg class="terrain" viewBox="0 0 1440 200" preserveAspectRatio="none">
     <path d="M0,160 L80,130 L200,145 L340,80 L500,60 L660,50 L820,40 L980,30 L1140,25 L1300,20 L1440,30 L1440,200 L0,200Z" fill="rgba(92,107,58,0.2)"/>
@@ -170,34 +121,33 @@ footer{padding:2rem 4rem;background:var(--earth);border-top:1px solid rgba(200,1
   </div>
   <div class="scroll-hint"><div class="scroll-line"></div><span>Scroll</span></div>
 </section>
-
 <section id="viewer">
-  <p class="section-label">Interactive 360° Viewer</p>
+  <p class="section-label">Interactive 360 Viewer</p>
   <h2 class="section-title">Explore Every Angle</h2>
-  <p class="section-desc">Drag to rotate. Scroll to zoom. Switch between exterior and interior views.</p>
-
+  <p class="section-desc">Drag to rotate. Use zoom buttons or pinch on mobile.</p>
   <div id="canvas-wrap">
-    <div id="pane-ext">
-      <canvas id="cv-ext"></canvas>
-      <div class="load-ov" id="ov-ext"><p class="load-sub">Loading</p><p class="load-title">Exterior View</p><div class="load-track"><div class="load-fill" id="fill-ext"></div></div></div>
+    <canvas id="cv-ext"></canvas>
+    <div id="ov-ext">
+      <p class="load-sub">Loading</p>
+      <p class="load-title">Exterior View</p>
+      <div class="load-track"><div id="fill-ext"></div></div>
     </div>
-
     <div class="vcontrols">
-      <span class="vh">Drag · Rotate</span><div class="vs"></div>
-      <button class="cb" onclick="zoomIn()">＋ Zoom</button>
-      <button class="cb" onclick="zoomOut()">－ Zoom</button>
+      <span class="vh">Drag Rotate</span>
+      <div class="vs"></div>
+      <button class="cb" onclick="zoomIn()">+ Zoom</button>
+      <button class="cb" onclick="zoomOut()">- Zoom</button>
       <div class="vs"></div>
       <button class="cb on" id="cb-auto" onclick="toggleAuto()">Auto</button>
       <button class="cb" onclick="resetCam()">Reset</button>
     </div>
   </div>
 </section>
-
 <section id="specs">
   <p class="section-label">The Numbers</p>
   <h2 class="section-title">Specifications</h2>
   <div class="specs-grid">
-    <div class="spec-item"><div class="spec-num">200<span class="spec-unit">Ah</span></div><p class="spec-lbl">LiFePO₄ Battery</p></div>
+    <div class="spec-item"><div class="spec-num">200<span class="spec-unit">Ah</span></div><p class="spec-lbl">LiFePO4 Battery</p></div>
     <div class="spec-item"><div class="spec-num">400<span class="spec-unit">W</span></div><p class="spec-lbl">Solar Panels</p></div>
     <div class="spec-item"><div class="spec-num">3<span class="spec-unit">kW</span></div><p class="spec-lbl">Inverter Output</p></div>
     <div class="spec-item"><div class="spec-num">60<span class="spec-unit">L</span></div><p class="spec-lbl">Fresh Water</p></div>
@@ -205,20 +155,18 @@ footer{padding:2rem 4rem;background:var(--earth);border-top:1px solid rgba(200,1
     <div class="spec-item"><div class="spec-num">100<span class="spec-unit">%</span></div><p class="spec-lbl">Custom to You</p></div>
   </div>
 </section>
-
 <section id="features">
   <p class="section-label">What's Inside</p>
   <h2 class="section-title">Every Detail Considered</h2>
   <div class="feat-grid">
-    <div class="feat-card"><p class="feat-num">01</p><h3 class="feat-title">Off-Grid Electrical</h3><p class="feat-desc">LiFePO₄ lithium batteries, dual solar input, MPPT controller, and a full 240V inverter. Power for weeks without a plug.</p></div>
+    <div class="feat-card"><p class="feat-num">01</p><h3 class="feat-title">Off-Grid Electrical</h3><p class="feat-desc">LiFePO4 lithium batteries, dual solar input, MPPT controller, and a full 240V inverter. Power for weeks without a plug.</p></div>
     <div class="feat-card"><p class="feat-num">02</p><h3 class="feat-title">Full Kitchen Setup</h3><p class="feat-desc">Induction cooktop, 12V compressor fridge, oak benchtop, and smart storage for everything you need on the road.</p></div>
-    <div class="feat-card"><p class="feat-num">03</p><h3 class="feat-title">Hot Shower & Bathroom</h3><p class="feat-desc">On-demand hot water, discreet wet bath or outdoor shower — because comfort shouldn't stop when the bitumen does.</p></div>
+    <div class="feat-card"><p class="feat-num">03</p><h3 class="feat-title">Hot Shower and Bathroom</h3><p class="feat-desc">On-demand hot water, discreet wet bath or outdoor shower. Comfort that does not stop when the bitumen does.</p></div>
     <div class="feat-card"><p class="feat-num">04</p><h3 class="feat-title">Custom Cabinetry</h3><p class="feat-desc">Handbuilt linen-finish cabinetry with birch ply edges. Designed for durability, built to feel like home.</p></div>
-    <div class="feat-card"><p class="feat-num">05</p><h3 class="feat-title">Insulation & Climate</h3><p class="feat-desc">Spray foam plus rigid board throughout — walls, roof, floor. NSW-rated for cold nights and scorching summer days.</p></div>
-    <div class="feat-card"><p class="feat-num">06</p><h3 class="feat-title">Compliance Ready</h3><p class="feat-desc">Full NSW registration, engineer's cert where required, and dealer-licensed build process. Drive it the day it's done.</p></div>
+    <div class="feat-card"><p class="feat-num">05</p><h3 class="feat-title">Insulation and Climate</h3><p class="feat-desc">Spray foam plus rigid board throughout. NSW-rated for cold nights and scorching summer days.</p></div>
+    <div class="feat-card"><p class="feat-num">06</p><h3 class="feat-title">Compliance Ready</h3><p class="feat-desc">Full NSW registration, engineer cert where required, and dealer-licensed build process. Drive it the day it is done.</p></div>
   </div>
 </section>
-
 <section id="process">
   <p class="section-label">How It Works</p>
   <h2 class="section-title">Your Build, Your Way</h2>
@@ -228,11 +176,10 @@ footer{padding:2rem 4rem;background:var(--earth);border-top:1px solid rgba(200,1
       <div class="proc-step"><div class="step-dot">1</div><p class="step-title">Consultation</p><p class="step-desc">We talk through your travel style, needs, and budget</p></div>
       <div class="proc-step"><div class="step-dot">2</div><p class="step-title">Design</p><p class="step-desc">Custom layout drawn up, materials and specs confirmed</p></div>
       <div class="proc-step"><div class="step-dot">3</div><p class="step-title">Build</p><p class="step-desc">12 weeks of handcrafted construction in our NSW workshop</p></div>
-      <div class="proc-step"><div class="step-dot">4</div><p class="step-title">Handover</p><p class="step-desc">Full walkthrough, compliance done — ready to roll</p></div>
+      <div class="proc-step"><div class="step-dot">4</div><p class="step-title">Handover</p><p class="step-desc">Full walkthrough, compliance done, ready to roll</p></div>
     </div>
   </div>
 </section>
-
 <section id="cta">
   <h2 class="cta-title">Ready to hit<br><em>the road?</em></h2>
   <p class="cta-sub">Limited build slots available. Get in touch to start your journey.</p>
@@ -241,223 +188,166 @@ footer{padding:2rem 4rem;background:var(--earth);border-top:1px solid rgba(200,1
     <a href="#viewer" class="btn btn-outline">View the Build</a>
   </div>
 </section>
-
 <footer>
   <div class="footer-logo">Blackman Campervans</div>
-  <p class="footer-txt">NSW, Australia · Built to Last · Built for Life</p>
+  <p class="footer-txt">NSW, Australia - Built to Last - Built for Life</p>
 </footer>
-
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
-// GLB files served from GitHub raw content
-const GLB = {
-  ext: 'van_exterior.glb',
-  int: 'van_exterior.glb'
-};
+var theta = 0.3, phi = 1.28, radius = 9;
+var autoRot = true;
+var drag = false, lx = 0, ly = 0;
+var renderer, scene, camera, target;
 
-const panes = {
-  ext: {
-    canvas: null, renderer: null, scene: null, camera: null,
-    theta: 0.3, phi: 1.28, radius: 9, tx: 0, ty: 1.1, tz: 0,
-    exposure: 1.4, loaded: false, target: null
-  },
-  int: {
-    canvas: null, renderer: null, scene: null, camera: null,
-    theta: 0.5, phi: 1.4, radius: 4, tx: 0, ty: 0.8, tz: 0,
-    exposure: 1.6, loaded: false, target: null
-  }
-};
-let cur = 'ext', autoRot = true;
-
-function initPane(k) {
-  const p = panes[k];
-  p.canvas = document.getElementById('cv-' + k);
-  p.target = new THREE.Vector3(p.tx, p.ty, p.tz);
-  p.renderer = new THREE.WebGLRenderer({canvas: p.canvas, antialias: true});
-  p.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  p.renderer.setClearColor(0x1A140C, 1);
-  p.renderer.shadowMap.enabled = true;
-  p.renderer.outputEncoding = THREE.sRGBEncoding;
-  p.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  p.renderer.toneMappingExposure = p.exposure;
-  p.scene = new THREE.Scene();
-  p.scene.fog = new THREE.Fog(0x1A140C, k === 'ext' ? 18 : 10, k === 'ext' ? 45 : 25);
-  p.camera = new THREE.PerspectiveCamera(42, 1, 0.01, 200);
-  if (k === 'ext') {
-    p.scene.add(new THREE.AmbientLight(0xfff8e8, 0.7));
-    var sun = new THREE.DirectionalLight(0xffe8c0, 2.2);
-    sun.position.set(6,10,5); sun.castShadow = true;
-    sun.shadow.mapSize.set(1024,1024);
-    p.scene.add(sun);
-    var fl=new THREE.DirectionalLight(0x8bb4c8,.55);fl.position.set(-5,3,-3);p.scene.add(fl);
-    var rl=new THREE.DirectionalLight(0xffa060,.4);rl.position.set(0,2,-9);p.scene.add(rl);
-    p.scene.add(new THREE.HemisphereLight(0x8bb4c8,0x2C2415,.35));
-  } else {
-    p.scene.add(new THREE.AmbientLight(0xfff0e0, 1.2));
-    var oh = new THREE.DirectionalLight(0xfff5e8, 1.8);
-    oh.position.set(0,6,0); oh.castShadow = true;
-    p.scene.add(oh);
-    var il=new THREE.DirectionalLight(0xffe0b0,1.0);il.position.set(3,2,3);p.scene.add(il);
-    var il2=new THREE.DirectionalLight(0xb0d0ff,.5);il2.position.set(-3,1,-2);p.scene.add(il2);
-    p.scene.add(new THREE.HemisphereLight(0xfff0cc,0x332200,.5));
-  }
-  var gnd = new THREE.Mesh(
-    new THREE.PlaneGeometry(60,60),
-    new THREE.MeshStandardMaterial({color: k==='ext'?0x181008:0x1A130A, roughness:.98})
-  );
-  gnd.rotation.x = -Math.PI/2; gnd.receiveShadow = true; gnd.position.y = -.002;
-  p.scene.add(gnd);
-  updateCam(k);
-}
-
-function updateCam(k) {
-  var p = panes[k];
-  p.camera.position.set(
-    p.target.x + p.radius*Math.sin(p.phi)*Math.sin(p.theta),
-    p.target.y + p.radius*Math.cos(p.phi),
-    p.target.z + p.radius*Math.sin(p.phi)*Math.cos(p.theta)
-  );
-  p.camera.lookAt(p.target);
-}
-
-function animateAll() {
-  requestAnimationFrame(animateAll);
-  if (autoRot) { panes[cur].theta += 0.004; updateCam(cur); }
-  panes.ext.renderer.render(panes.ext.scene, panes.ext.camera);
-  panes.int.renderer.render(panes.int.scene, panes.int.camera);
-}
-
-function resizeAll() {
+function setup() {
+  var canvas = document.getElementById('cv-ext');
   var wrap = document.getElementById('canvas-wrap');
   var w = wrap.clientWidth;
-  var h = document.getElementById('cv-ext').clientHeight;
-  for (var k in panes) {
-    var p = panes[k];
-    if (!p.renderer) continue;
-    p.renderer.setSize(w, h, false);
-    p.camera.aspect = w/h;
-    p.camera.updateProjectionMatrix();
-  }
+  var h = 560;
+
+  renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x1A140C, 1);
+  renderer.shadowMap.enabled = true;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.4;
+  renderer.setSize(w, h, false);
+
+  scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x1A140C, 18, 45);
+
+  camera = new THREE.PerspectiveCamera(42, w / h, 0.01, 200);
+  target = new THREE.Vector3(0, 1.1, 0);
+
+  scene.add(new THREE.AmbientLight(0xfff8e8, 0.7));
+  var sun = new THREE.DirectionalLight(0xffe8c0, 2.2);
+  sun.position.set(6, 10, 5);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  scene.add(sun);
+  var fl = new THREE.DirectionalLight(0x8bb4c8, 0.55);
+  fl.position.set(-5, 3, -3);
+  scene.add(fl);
+  var rl = new THREE.DirectionalLight(0xffa060, 0.4);
+  rl.position.set(0, 2, -9);
+  scene.add(rl);
+  scene.add(new THREE.HemisphereLight(0x8bb4c8, 0x2C2415, 0.35));
+
+  var gnd = new THREE.Mesh(
+    new THREE.PlaneGeometry(60, 60),
+    new THREE.MeshStandardMaterial({color: 0x181008, roughness: 0.98})
+  );
+  gnd.rotation.x = -Math.PI / 2;
+  gnd.receiveShadow = true;
+  gnd.position.y = -0.002;
+  scene.add(gnd);
+
+  updateCam();
+  animate();
+  loadGLB();
 }
 
-function loadPane(k) {
-  var p = panes[k];
-  if (p.loaded) return;
-  var fill = document.getElementById('fill-' + k);
-  var ov = document.getElementById('ov-' + k);
-  fill.style.width = '20%';
-  var loader = new THREE.GLTFLoader();
-  loader.load(GLB[k], function(gltf) {
-    fill.style.width = '100%';
-    var mdl = gltf.scene;
-    mdl.traverse(function(c) { if(c.isMesh){c.castShadow=true;c.receiveShadow=true;} });
-    mdl.rotation.y = Math.PI * 0.12;
-    p.scene.add(mdl);
-    p.loaded = true;
-    setTimeout(function() { ov.classList.add('gone'); }, 400);
-  }, function(xhr) {
-    if (xhr.total) fill.style.width = (20 + xhr.loaded/xhr.total*75) + '%';
-  }, function(err) {
-    console.error(k, err);
-  });
+function updateCam() {
+  camera.position.set(
+    target.x + radius * Math.sin(phi) * Math.sin(theta),
+    target.y + radius * Math.cos(phi),
+    target.z + radius * Math.sin(phi) * Math.cos(theta)
+  );
+  camera.lookAt(target);
 }
 
-// Orbit controls
-var drag=false, lx=0, ly=0;
-var wrap = document.getElementById('canvas-wrap');
-wrap.addEventListener('mousedown', function(e) {
-  if (e.target.tagName==='CANVAS') { drag=true; lx=e.clientX; ly=e.clientY; }
-});
-window.addEventListener('mouseup', function() { drag=false; });
+function animate() {
+  requestAnimationFrame(animate);
+  if (autoRot) { theta += 0.004; updateCam(); }
+  renderer.render(scene, camera);
+}
+
+function resize() {
+  var wrap = document.getElementById('canvas-wrap');
+  var w = wrap.clientWidth;
+  var h = 560;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+
+function loadGLB() {
+  var fill = document.getElementById('fill-ext');
+  var ov = document.getElementById('ov-ext');
+  fill.style.width = '10%';
+  new THREE.GLTFLoader().load('van_exterior.glb',
+    function(gltf) {
+      var mdl = gltf.scene;
+      mdl.traverse(function(c) {
+        if (c.isMesh) { c.castShadow = true; c.receiveShadow = true; }
+      });
+      mdl.rotation.y = Math.PI * 0.12;
+      scene.add(mdl);
+      fill.style.width = '100%';
+      resize();
+      renderer.render(scene, camera);
+      setTimeout(function() {
+        ov.classList.add('gone');
+        resize();
+        renderer.render(scene, camera);
+      }, 300);
+    },
+    function(xhr) {
+      if (xhr.total) fill.style.width = (10 + xhr.loaded / xhr.total * 85) + '%';
+    },
+    function(err) {
+      document.getElementById('ov-ext').innerHTML = '<p style="color:#f55;font-size:0.85rem;font-family:monospace">Load error - check console</p>';
+      console.error(err);
+    }
+  );
+}
+
+var cv = document.getElementById('cv-ext');
+cv.addEventListener('mousedown', function(e) { drag = true; lx = e.clientX; ly = e.clientY; });
+window.addEventListener('mouseup', function() { drag = false; });
 window.addEventListener('mousemove', function(e) {
   if (!drag) return;
-  var p = panes[cur];
-  p.theta -= (e.clientX-lx)*0.007;
-  p.phi = Math.max(.05, Math.min(Math.PI*.88, p.phi+(e.clientY-ly)*.005));
-  lx=e.clientX; ly=e.clientY; updateCam(cur);
+  theta -= (e.clientX - lx) * 0.007;
+  phi = Math.max(0.05, Math.min(Math.PI * 0.88, phi + (e.clientY - ly) * 0.005));
+  lx = e.clientX; ly = e.clientY; updateCam();
 });
-wrap.addEventListener('wheel', function(e) {
-  var p = panes[cur];
-  p.radius = Math.max(2, Math.min(22, p.radius+e.deltaY*.015));
-  updateCam(cur);
-}, {passive:true});
-var tx=0,ty=0,pd=0;
-wrap.addEventListener('touchstart', function(e) {
-  if (e.touches.length===1){tx=e.touches[0].clientX;ty=e.touches[0].clientY;}
-  else{pd=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);}
-},{passive:true});
-wrap.addEventListener('touchmove', function(e) {
+cv.addEventListener('wheel', function(e) {
+  radius = Math.max(3, Math.min(20, radius + e.deltaY * 0.012));
+  updateCam();
+}, {passive: true});
+var tx = 0, ty = 0, pd = 0;
+cv.addEventListener('touchstart', function(e) {
+  if (e.touches.length === 1) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }
+  else { pd = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); }
+}, {passive: true});
+cv.addEventListener('touchmove', function(e) {
   e.preventDefault();
-  var p = panes[cur];
-  if (e.touches.length===1){
-    p.theta-=(e.touches[0].clientX-tx)*.009;
-    p.phi=Math.max(.05,Math.min(Math.PI*.88,p.phi+(e.touches[0].clientY-ty)*.007));
-    tx=e.touches[0].clientX;ty=e.touches[0].clientY;updateCam(cur);
+  if (e.touches.length === 1) {
+    theta -= (e.touches[0].clientX - tx) * 0.009;
+    phi = Math.max(0.05, Math.min(Math.PI * 0.88, phi + (e.touches[0].clientY - ty) * 0.007));
+    tx = e.touches[0].clientX; ty = e.touches[0].clientY; updateCam();
   } else {
-    var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
-    p.radius=Math.max(2,Math.min(22,p.radius-(d-pd)*.05));pd=d;updateCam(cur);
+    var d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    radius = Math.max(3, Math.min(20, radius - (d - pd) * 0.05));
+    pd = d; updateCam();
   }
-},{passive:false});
+}, {passive: false});
 
-function zoomIn() {
-  var p = panes[cur];
-  p.radius = Math.max(2, p.radius - 1);
-  updateCam(cur);
-}
-function zoomOut() {
-  var p = panes[cur];
-  p.radius = Math.min(22, p.radius + 1);
-  updateCam(cur);
-}
-function switchView(k) {
-  // Single view only
-}
-function toggleAuto() {
-  autoRot = !autoRot;
-  document.getElementById('cb-auto').classList.toggle('on', autoRot);
-}
-function resetCam() {
-  var d = {ext:{theta:.3,phi:1.28,radius:9},int:{theta:.5,phi:1.4,radius:4}};
-  var dd = d[cur]; var p = panes[cur];
-  p.theta=dd.theta; p.phi=dd.phi; p.radius=dd.radius; updateCam(cur);
-}
-window.addEventListener('resize', resizeAll);
+function zoomIn() { radius = Math.max(3, radius - 1); updateCam(); }
+function zoomOut() { radius = Math.min(20, radius + 1); updateCam(); }
+function toggleAuto() { autoRot = !autoRot; document.getElementById('cb-auto').classList.toggle('on', autoRot); }
+function resetCam() { theta = 0.3; phi = 1.28; radius = 9; updateCam(); }
+window.addEventListener('resize', resize);
 
-// Boot - wait for scripts to load before starting
 function boot() {
   if (typeof THREE === 'undefined' || typeof THREE.GLTFLoader === 'undefined') {
     setTimeout(boot, 50);
     return;
   }
-  initPane('ext');
-  initPane('int');
-  // Set explicit canvas sizes immediately
-  var wrap = document.getElementById('canvas-wrap');
-  var w = wrap.clientWidth || 800;
-  var h = 560;
-  for (var k in panes) {
-    var p = panes[k];
-    if (!p.renderer) continue;
-    p.renderer.setSize(w, h, false);
-    p.camera.aspect = w/h;
-    p.camera.updateProjectionMatrix();
-  }
-  animateAll();
-  loadPane('ext');
-  // Re-resize after a short delay to catch any layout shifts
-  setTimeout(resizeAll, 500);
-  setTimeout(resizeAll, 1500);
+  setup();
 }
-// Use IntersectionObserver to re-render when viewer scrolls into view
-var _observed = false;
-var _obs = new IntersectionObserver(function(entries) {
-  if (entries[0].isIntersecting && !_observed) {
-    _observed = true;
-    resizeAll();
-  }
-});
-_obs.observe(document.getElementById('viewer'));
 boot();
 </script>
 </body>
