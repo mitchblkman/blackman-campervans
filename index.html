@@ -283,6 +283,19 @@ function loadGLB() {
       mdl.traverse(function(c) {
         if (c.isMesh) { c.castShadow = true; c.receiveShadow = true; }
       });
+      // Auto-scale and centre the model regardless of original OBJ units
+      var box = new THREE.Box3().setFromObject(mdl);
+      var size = box.getSize(new THREE.Vector3());
+      var centre = box.getCenter(new THREE.Vector3());
+      var maxDim = Math.max(size.x, size.y, size.z);
+      var scl = 5.0 / maxDim;
+      mdl.scale.set(scl, scl, scl);
+      // Recentre after scaling
+      box.setFromObject(mdl);
+      centre = box.getCenter(new THREE.Vector3());
+      mdl.position.x -= centre.x;
+      mdl.position.z -= centre.z;
+      mdl.position.y -= box.min.y;
       mdl.rotation.y = Math.PI * 0.12;
       scene.add(mdl);
       fill.style.width = '100%';
