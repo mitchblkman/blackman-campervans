@@ -195,7 +195,7 @@ footer{padding:2rem 4rem;background:var(--earth);border-top:1px solid rgba(200,1
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
-var theta = 0.3, phi = 1.28, radius = 9;
+var theta = 0.3, phi = 1.1, radius = 9;
 var autoRot = true;
 var drag = false, lx = 0, ly = 0;
 var renderer, scene, camera, target;
@@ -208,7 +208,7 @@ function setup() {
 
   renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setClearColor(0x1A140C, 1);
+  renderer.setClearColor(0x0D1117, 1);
   renderer.shadowMap.enabled = true;
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -235,14 +235,50 @@ function setup() {
   scene.add(rl);
   scene.add(new THREE.HemisphereLight(0x8bb4c8, 0x2C2415, 0.35));
 
+  // Ground plane - subtle concrete/asphalt look
   var gnd = new THREE.Mesh(
-    new THREE.PlaneGeometry(60, 60),
-    new THREE.MeshStandardMaterial({color: 0x181008, roughness: 0.98})
+    new THREE.CircleGeometry(12, 64),
+    new THREE.MeshStandardMaterial({color: 0x1C1C1C, roughness: 0.95, metalness: 0.0})
   );
   gnd.rotation.x = -Math.PI / 2;
   gnd.receiveShadow = true;
   gnd.position.y = -0.002;
   scene.add(gnd);
+
+  // Background gradient sky using a large sphere
+  var skyGeo = new THREE.SphereGeometry(80, 32, 16);
+  var skyMat = new THREE.ShaderMaterial({
+    uniforms: {
+      topColor: {value: new THREE.Color(0x0D1117)},
+      bottomColor: {value: new THREE.Color(0x2C2415)},
+      offset: {value: 10},
+      exponent: {value: 0.4}
+    },
+    vertexShader: [
+      'varying vec3 vWorldPosition;',
+      'void main() {',
+      '  vec4 worldPosition = modelMatrix * vec4(position, 1.0);',
+      '  vWorldPosition = worldPosition.xyz;',
+      '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
+      '}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform vec3 topColor;',
+      'uniform vec3 bottomColor;',
+      'uniform float offset;',
+      'uniform float exponent;',
+      'varying vec3 vWorldPosition;',
+      'void main() {',
+      '  float h = normalize(vWorldPosition + offset).y;',
+      '  gl_FragColor = vec4(mix(bottomColor, topColor, max(pow(max(h, 0.0), exponent), 0.0)), 1.0);',
+      '}'
+    ].join('\n'),
+    side: THREE.BackSide
+  });
+  scene.add(new THREE.Mesh(skyGeo, skyMat));
+
+  // Remove fog - sky handles depth
+  scene.fog = null;
 
   updateCam();
   animate();
@@ -295,10 +331,12 @@ function loadGLB() {
       mdl.scale.set(scl, scl, scl);
 
       // Step 4: Blender GLB = Z-up, rotate to Y-up + face camera nicely
-      // Apply rotations separately to avoid gimbal lean
+      // Wrap in a group to cleanly separate coordinate system fix from display rotation
+      // Inner group fixes Blender Z-up -> Three.js Y-up
+      var wrapper = new THREE.Group();
+      wrapper.add(mdl);
       mdl.rotation.x = -Math.PI / 2;
-      mdl.rotation.y = 0;
-      mdl.rotation.z = 0;
+      mdl = wrapper;
 
       // Step 5: colours from material names
       mdl.traverse(function(c) {
@@ -351,7 +389,7 @@ window.addEventListener('mouseup', function() { drag = false; });
 window.addEventListener('mousemove', function(e) {
   if (!drag) return;
   theta -= (e.clientX - lx) * 0.007;
-  phi = Math.max(0.05, Math.min(Math.PI * 0.88, phi + (e.clientY - ly) * 0.005));
+  phi = Math.max(0.15, Math.min(Math.PI * 0.72, phi + (e.clientY - ly) * 0.005));
   lx = e.clientX; ly = e.clientY; updateCam();
 });
 cv.addEventListener('wheel', function(e) {
@@ -367,7 +405,7 @@ cv.addEventListener('touchmove', function(e) {
   e.preventDefault();
   if (e.touches.length === 1) {
     theta -= (e.touches[0].clientX - tx) * 0.009;
-    phi = Math.max(0.05, Math.min(Math.PI * 0.88, phi + (e.touches[0].clientY - ty) * 0.007));
+    phi = Math.max(0.15, Math.min(Math.PI * 0.72, phi + (e.touches[0].clientY - ty) * 0.007));
     tx = e.touches[0].clientX; ty = e.touches[0].clientY; updateCam();
   } else {
     var d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
@@ -379,7 +417,7 @@ cv.addEventListener('touchmove', function(e) {
 function zoomIn() { radius = Math.max(3, radius - 1); updateCam(); }
 function zoomOut() { radius = Math.min(20, radius + 1); updateCam(); }
 function toggleAuto() { autoRot = !autoRot; document.getElementById('cb-auto').classList.toggle('on', autoRot); }
-function resetCam() { theta = 0.3; phi = 1.28; radius = 9; updateCam(); }
+function resetCam() { theta = 0.3; phi = 1.1; radius = 9; updateCam(); }
 window.addEventListener('resize', resize);
 
 function boot() {
