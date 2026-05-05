@@ -208,7 +208,7 @@ function setup() {
 
   renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setClearColor(0xF0A855, 1);
+  renderer.setClearColor(0x87CEEB, 1);
   renderer.shadowMap.enabled = true;
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -219,117 +219,122 @@ function setup() {
   scene.fog = new THREE.Fog(0x1A140C, 18, 45);
 
   camera = new THREE.PerspectiveCamera(42, w / h, 0.01, 200);
-  target = new THREE.Vector3(0, 0.9, 0);
+  target = new THREE.Vector3(0, 1.0, 0);
 
-  // Golden hour lighting - warm sun low on horizon
-  scene.add(new THREE.AmbientLight(0xFFE8C0, 0.5));
+  // Beach lighting - bright tropical sun
+  scene.add(new THREE.AmbientLight(0xFFF5E0, 0.7));
 
-  var sun = new THREE.DirectionalLight(0xFFCC77, 2.8);
-  sun.position.set(8, 6, 4);
+  var sun = new THREE.DirectionalLight(0xFFF8E0, 2.5);
+  sun.position.set(10, 12, 6);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
   sun.shadow.camera.near = 0.5;
-  sun.shadow.camera.far = 50;
+  sun.shadow.camera.far = 60;
   sun.shadow.camera.left = -8;
   sun.shadow.camera.right = 8;
   sun.shadow.camera.top = 8;
   sun.shadow.camera.bottom = -8;
   scene.add(sun);
 
-  // Cool fill from opposite side (sky reflection)
-  var fill = new THREE.DirectionalLight(0x88BBDD, 0.6);
-  fill.position.set(-6, 4, -3);
+  var fill = new THREE.DirectionalLight(0x88CCFF, 0.5);
+  fill.position.set(-8, 5, -4);
   scene.add(fill);
+  scene.add(new THREE.HemisphereLight(0x87CEEB, 0xF4D03F, 0.5));
 
-  // Warm bounce from ground
-  var bounce = new THREE.DirectionalLight(0xFFAA55, 0.3);
-  bounce.position.set(0, -2, 3);
-  scene.add(bounce);
+  // ── SAND GROUND ────────────────────────────────────────────────
+  var sandMat = new THREE.MeshStandardMaterial({color: 0xE8D5A3, roughness: 0.98, metalness: 0.0});
+  var sand = new THREE.Mesh(new THREE.PlaneGeometry(200, 100), sandMat);
+  sand.rotation.x = -Math.PI / 2;
+  sand.receiveShadow = true;
+  sand.position.set(0, -0.002, 0);
+  scene.add(sand);
 
-  scene.add(new THREE.HemisphereLight(0x7BAFD4, 0x8B6914, 0.5));
-
-  // ── GROUND ──────────────────────────────────────────────────────
-  // Large dirt/earth ground plane
-  var groundMat = new THREE.MeshStandardMaterial({
-    color: 0x8B7355, roughness: 0.95, metalness: 0.0
+  // ── OCEAN ───────────────────────────────────────────────────────
+  var waterMat = new THREE.MeshStandardMaterial({
+    color: 0x006994, roughness: 0.05, metalness: 0.3,
+    transparent: true, opacity: 0.85
   });
-  var ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), groundMat);
-  ground.rotation.x = -Math.PI / 2;
-  ground.receiveShadow = true;
-  ground.position.y = -0.002;
-  scene.add(ground);
+  var water = new THREE.Mesh(new THREE.PlaneGeometry(200, 120), waterMat);
+  water.rotation.x = -Math.PI / 2;
+  water.position.set(0, -0.003, -30);
+  scene.add(water);
 
-  // Darker central pad under van
-  var padMat = new THREE.MeshStandardMaterial({color: 0x6B5A40, roughness: 0.98});
-  var pad = new THREE.Mesh(new THREE.CircleGeometry(4, 32), padMat);
-  pad.rotation.x = -Math.PI / 2;
-  pad.receiveShadow = true;
-  pad.position.y = -0.001;
-  scene.add(pad);
+  // Shoreline foam strip
+  var foamMat = new THREE.MeshStandardMaterial({color: 0xF0F8FF, roughness: 0.9, transparent: true, opacity: 0.7});
+  var foam = new THREE.Mesh(new THREE.PlaneGeometry(200, 1.5), foamMat);
+  foam.rotation.x = -Math.PI / 2;
+  foam.position.set(0, -0.001, -8);
+  scene.add(foam);
 
-  // ── MOUNTAIN SILHOUETTES ─────────────────────────────────────────
-  function makeMountain(x, z, w, h, col) {
-    var shape = new THREE.Shape();
-    shape.moveTo(-w/2, 0);
-    shape.lineTo(-w*0.3, h*0.4);
-    shape.lineTo(-w*0.1, h*0.7);
-    shape.lineTo(0, h);
-    shape.lineTo(w*0.12, h*0.75);
-    shape.lineTo(w*0.28, h*0.5);
-    shape.lineTo(w/2, 0);
-    shape.lineTo(-w/2, 0);
-    var geo = new THREE.ShapeGeometry(shape);
-    var mat = new THREE.MeshBasicMaterial({color: col, side: THREE.DoubleSide});
-    var m = new THREE.Mesh(geo, mat);
-    m.position.set(x, 0, z);
-    m.rotation.y = Math.random() * 0.3 - 0.15;
-    scene.add(m);
+  // ── PALM TREES ─────────────────────────────────────────────────
+  function makePalm(x, z, h, lean) {
+    var g = new THREE.Group();
+    // Trunk
+    var trunk = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.06, 0.1, h, 6),
+      new THREE.MeshStandardMaterial({color: 0x8B6914, roughness: 0.9})
+    );
+    trunk.position.y = h / 2;
+    trunk.rotation.z = lean;
+    g.add(trunk);
+    // Fronds - 6 leaves fanning out
+    for (var i = 0; i < 6; i++) {
+      var angle = (i / 6) * Math.PI * 2;
+      var frond = new THREE.Mesh(
+        new THREE.ConeGeometry(0.08, 1.2, 4),
+        new THREE.MeshStandardMaterial({color: 0x2D7A27, roughness: 0.8})
+      );
+      frond.position.set(
+        Math.sin(angle) * 0.6 + Math.sin(lean) * h,
+        h + Math.cos(angle) * 0.15,
+        Math.cos(angle) * 0.6
+      );
+      frond.rotation.z = angle + Math.PI / 2;
+      frond.rotation.x = 0.4;
+      g.add(frond);
+    }
+    // Coconuts cluster
+    var nut = new THREE.Mesh(
+      new THREE.SphereGeometry(0.12, 6, 4),
+      new THREE.MeshStandardMaterial({color: 0x5C3A1E, roughness: 0.9})
+    );
+    nut.position.set(Math.sin(lean) * h, h, 0);
+    g.add(nut);
+    g.position.set(x, 0, z);
+    scene.add(g);
   }
 
-  // Far mountains (dark, misty)
-  makeMountain(-18, -28, 20, 12, 0x2A3A4A);
-  makeMountain(-4,  -30, 16, 14, 0x1E2D3A);
-  makeMountain(10,  -28, 18, 11, 0x253545);
-  makeMountain(22,  -26, 14, 10, 0x2A3A4A);
+  // Left cluster of palms
+  makePalm(-5.5, -4, 3.5, 0.12);
+  makePalm(-7, -2, 4.0, -0.08);
+  makePalm(-6, -6, 3.0, 0.15);
+  // Right cluster
+  makePalm(5.5, -3, 3.8, -0.1);
+  makePalm(7, -5, 4.2, 0.08);
+  // Background singles
+  makePalm(-10, -10, 5.0, 0.1);
+  makePalm(9, -8, 4.5, -0.12);
 
-  // Mid mountains (slightly lighter)
-  makeMountain(-14, -18, 14, 9,  0x3A4E5C);
-  makeMountain(2,   -20, 12, 10, 0x344858);
-  makeMountain(16,  -17, 13, 8,  0x3A4E5C);
-
-  // Near hills (warmest tone)
-  makeMountain(-10, -12, 10, 5,  0x4A5C45);
-  makeMountain(8,   -11, 9,  6,  0x485A42);
-
-  // ── SKY GRADIENT ────────────────────────────────────────────────
+  // ── SKY ─────────────────────────────────────────────────────────
   var skyGeo = new THREE.SphereGeometry(90, 32, 16);
   var skyMat = new THREE.ShaderMaterial({
     uniforms: {
-      topColor:    {value: new THREE.Color(0x1A2744)},
-      midColor:    {value: new THREE.Color(0xE8733A)},
-      horizColor:  {value: new THREE.Color(0xF0A855)},
-      groundColor: {value: new THREE.Color(0x8B7355)}
+      topColor:   {value: new THREE.Color(0x0077CC)},
+      horizColor: {value: new THREE.Color(0x87CEEB)},
+      sandColor:  {value: new THREE.Color(0xE8D5A3)}
     },
     vertexShader: [
       'varying vec3 vPos;',
-      'void main() {',
-      '  vPos = position;',
-      '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);',
-      '}'
+      'void main() { vPos = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }'
     ].join('\n'),
     fragmentShader: [
-      'uniform vec3 topColor, midColor, horizColor, groundColor;',
+      'uniform vec3 topColor, horizColor, sandColor;',
       'varying vec3 vPos;',
       'void main() {',
       '  float h = normalize(vPos).y;',
       '  vec3 col;',
-      '  if (h > 0.15) {',
-      '    col = mix(midColor, topColor, smoothstep(0.15, 0.7, h));',
-      '  } else if (h > -0.05) {',
-      '    col = mix(horizColor, midColor, smoothstep(-0.05, 0.15, h));',
-      '  } else {',
-      '    col = groundColor;',
-      '  }',
+      '  if (h > 0.0) col = mix(horizColor, topColor, smoothstep(0.0, 0.6, h));',
+      '  else col = mix(sandColor, horizColor, smoothstep(-0.3, 0.0, h));',
       '  gl_FragColor = vec4(col, 1.0);',
       '}'
     ].join('\n'),
@@ -338,8 +343,8 @@ function setup() {
   });
   scene.add(new THREE.Mesh(skyGeo, skyMat));
 
-  // Subtle fog to blend mountains into distance
-  scene.fog = new THREE.FogExp2(0xC4894A, 0.012);
+  // Light sea fog in distance
+  scene.fog = new THREE.FogExp2(0xB8E0F0, 0.018);
 
   updateCam();
   animate();
@@ -399,7 +404,7 @@ function loadGLB() {
       mdl.rotation.x = -Math.PI / 2;
       mdl = wrapper;
 
-      // Step 5: colours from material names
+      // Step 5: apply colours - parse RGB from material name or match by keyword
       mdl.traverse(function(c) {
         if (!c.isMesh) return;
         c.castShadow = true;
@@ -407,20 +412,45 @@ function loadGLB() {
         var n = c.material ? (c.material.name || '') : '';
         var nl = n.toLowerCase();
         var col = null;
-        if (nl.indexOf('white') > -1) col = 0xF2F2F2;
-        else if (nl.indexOf('black') > -1 || nl.indexOf('oxide') > -1) col = 0x151515;
-        else if (nl.indexOf('oak') > -1) col = 0xC4945A;
-        else if (nl.indexOf('mahogany') > -1 || nl.indexOf('bamboo') > -1) col = 0xC8A96E;
-        else if (nl.indexOf('steel') > -1 || nl.indexOf('satin') > -1) col = 0xAAAAAA;
-        else if (nl.indexOf('blue') > -1) col = 0x4A6FA5;
-        else if (n.indexOf('Opaque(255') > -1) col = 0xF2F2F2;
-        else if (n.indexOf('Opaque(26') > -1 || n.indexOf('Opaque(51') > -1) col = 0x151515;
-        else if (n.indexOf('245,245,245') > -1 || n.indexOf('240,240,240') > -1) col = 0xEEEEEE;
+        var rough = 0.6;
+        var metal = 0.0;
+
+        // Parse "Opaque(R,G,B)" format
+        var op = n.match(/Opaque\((\d+),(\d+),(\d+)\)/);
+        if (op) {
+          var r=parseInt(op[1]),g=parseInt(op[2]),b=parseInt(op[3]);
+          col=(r<<16)|(g<<8)|b;
+          var br=(r+g+b)/3;
+          rough=br<30?0.9:br>200?0.2:0.55;
+          metal=(Math.abs(r-g)<15&&Math.abs(g-b)<15&&br>80&&br<180)?0.4:0.0;
+        }
+        // Try parsing "R,G,B" format material names
+        var rgb = !op && n.match(/^(\d+),(\d+),(\d+)/);
+        if (rgb && !op) {
+          var r = parseInt(rgb[1]);
+          var g = parseInt(rgb[2]);
+          var b = parseInt(rgb[3]);
+          
+          col = (r << 16) | (g << 8) | b;
+          // Adjust roughness based on brightness
+          var brightness = (r + g + b) / 3;
+          rough = brightness < 30 ? 0.9 : brightness > 200 ? 0.25 : 0.6;
+          metal = (Math.abs(r-g) < 15 && Math.abs(g-b) < 15 && brightness > 80 && brightness < 180) ? 0.4 : 0.0;
+        }
+        // Named materials
+        else if (nl.indexOf('white') > -1) { col = 0xF2F2F2; rough = 0.2; }
+        else if (nl.indexOf('black') > -1 || nl.indexOf('oxide') > -1) { col = 0x151515; rough = 0.85; }
+        else if (nl.indexOf('oak') > -1) { col = 0xC4945A; rough = 0.8; }
+        else if (nl.indexOf('mahogany') > -1 || nl.indexOf('bamboo') > -1) { col = 0xC8A96E; rough = 0.75; }
+        else if (nl.indexOf('steel') > -1 || nl.indexOf('satin') > -1) { col = 0xAAAAAA; rough = 0.3; metal = 0.7; }
+        else if (nl.indexOf('gloss') > -1) { col = 0xF2F2F2; rough = 0.15; }
+        else if (n.indexOf('245,245,245') > -1 || n.indexOf('240,240,240') > -1 || n.indexOf('250,250,250') > -1) { col = 0xF2F2F2; rough = 0.25; }
+
         if (col !== null) {
           c.material = c.material.clone();
           c.material.color.setHex(col);
-          c.material.roughness = nl.indexOf('gloss') > -1 ? 0.2 : 0.65;
-          c.material.metalness = nl.indexOf('steel') > -1 ? 0.8 : 0.0;
+          c.material.roughness = rough;
+          c.material.metalness = metal;
           c.material.needsUpdate = true;
         }
       });
