@@ -429,12 +429,19 @@ function resetCam() {
 }
 window.addEventListener('resize', resizeAll);
 
-// Boot
-initPane('ext');
-initPane('int');
-resizeAll();
-animateAll();
-loadPane('ext');
+// Boot - wait for scripts to load before starting
+function boot() {
+  if (typeof THREE === 'undefined' || typeof THREE.GLTFLoader === 'undefined') {
+    setTimeout(boot, 50);
+    return;
+  }
+  initPane('ext');
+  initPane('int');
+  resizeAll();
+  animateAll();
+  loadPane('ext');
+}
+boot();
 </script>
 </body>
 </html>
