@@ -7,614 +7,198 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --navy: #080D14;
-  --navy-mid: #0D1520;
-  --navy-light: #162030;
-  --blue-accent: #1A4A7A;
-  --gold: #C8A96E;
-  --gold-light: #E4C98A;
-  --white: #F4F1EC;
-  --grey: #8A9BAD;
-  --grey-dark: #3A4A5A;
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  background: var(--navy);
-  color: var(--white);
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 300;
-  overflow-x: hidden;
-  cursor: default;
-}
-
-/* ── NAV ──────────────────────────────────────────────── */
-#nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 1.8rem 4rem;
-  transition: background 0.5s, padding 0.4s;
-}
-#nav.scrolled {
-  background: rgba(8,13,20,0.97);
-  backdrop-filter: blur(12px);
-  padding: 1.2rem 4rem;
-  border-bottom: 1px solid rgba(200,169,110,0.1);
-}
-.nav-logo {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300;
-  font-size: 1.15rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--white);
-  text-decoration: none;
-}
-.nav-logo span { color: var(--gold); font-style: italic; }
-.nav-links { display: flex; gap: 3rem; list-style: none; }
-.nav-links a {
-  font-size: 0.68rem;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: rgba(244,241,236,0.55);
-  text-decoration: none;
-  transition: color 0.3s;
-}
-.nav-links a:hover { color: var(--gold); }
-.nav-cta {
-  font-size: 0.68rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--gold);
-  border: 1px solid rgba(200,169,110,0.4);
-  padding: 0.6rem 1.6rem;
-  text-decoration: none;
-  transition: all 0.3s;
-}
-.nav-cta:hover { background: var(--gold); color: var(--navy); }
-
-/* ── HERO / 3D VIEWER ──────────────────────────────────── */
-#hero {
-  position: relative;
-  height: 100vh;
-  min-height: 700px;
-  overflow: hidden;
-  background: var(--navy);
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-}
-#three-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  cursor: grab;
-}
-#three-canvas:active { cursor: grabbing; }
-
-/* Vignette overlay */
-#hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% 60%, transparent 40%, rgba(8,13,20,0.7) 100%),
-    linear-gradient(to bottom, rgba(8,13,20,0.4) 0%, transparent 30%, transparent 65%, rgba(8,13,20,0.95) 100%);
-  pointer-events: none;
-  z-index: 1;
-}
-.hero-text {
-  position: relative; z-index: 2;
-  text-align: center;
-  padding: 0 2rem 5rem;
-  opacity: 0;
-  animation: heroReveal 1.4s ease 0.8s forwards;
-}
-.hero-eyebrow {
-  font-size: 0.65rem;
-  letter-spacing: 0.45em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 1.2rem;
-}
-.hero-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300;
-  font-size: clamp(3.5rem, 7vw, 6.5rem);
-  line-height: 1.0;
-  color: var(--white);
-  margin-bottom: 0.3rem;
-}
-.hero-title em { font-style: italic; color: var(--gold-light); }
-.hero-sub {
-  font-size: 0.7rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: rgba(244,241,236,0.5);
-  margin-bottom: 2.5rem;
-}
-.hero-actions { display: flex; gap: 1rem; justify-content: center; }
-.btn-primary {
-  font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
-  background: var(--gold); color: var(--navy);
-  padding: 0.9rem 2.4rem; text-decoration: none;
-  transition: all 0.3s;
-  font-family: 'Montserrat', sans-serif; font-weight: 400;
-}
-.btn-primary:hover { background: var(--gold-light); }
-.btn-ghost {
-  font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
-  background: transparent; color: var(--white);
-  padding: 0.9rem 2.4rem; text-decoration: none;
-  border: 1px solid rgba(244,241,236,0.3); transition: all 0.3s;
-  font-family: 'Montserrat', sans-serif; font-weight: 300;
-}
-.btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
-
-/* Viewer controls overlay */
-#viewer-controls {
-  position: absolute;
-  bottom: 8.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  opacity: 0;
-  animation: heroReveal 1s ease 1.5s forwards;
-}
-.vc-btn {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  background: rgba(8,13,20,0.7);
-  border: 1px solid rgba(200,169,110,0.25);
-  color: rgba(244,241,236,0.6);
-  padding: 0.4rem 0.9rem;
-  cursor: pointer;
-  transition: all 0.25s;
-  backdrop-filter: blur(8px);
-}
-.vc-btn:hover, .vc-btn.on { border-color: var(--gold); color: var(--gold); }
-.vc-sep { width: 1px; height: 12px; background: rgba(200,169,110,0.2); }
-
-/* Loading overlay */
-#load-overlay {
-  position: absolute; inset: 0; z-index: 10;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 1.5rem;
-  background: var(--navy);
-  transition: opacity 0.8s;
-}
-#load-overlay.gone { opacity: 0; pointer-events: none; }
-.load-logo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.4rem; letter-spacing: 0.3em;
-  text-transform: uppercase; color: var(--gold);
-  font-weight: 300;
-}
-.load-bar { width: 180px; height: 1px; background: rgba(200,169,110,0.15); }
-.load-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; }
-.load-txt {
-  font-size: 0.6rem; letter-spacing: 0.35em;
-  text-transform: uppercase; color: var(--grey);
-}
-
-/* Scroll indicator */
-.scroll-ind {
-  position: absolute; bottom: 2rem; left: 50%;
-  transform: translateX(-50%); z-index: 2;
-  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-  opacity: 0; animation: heroReveal 1s ease 2s forwards;
-}
-.scroll-ind span {
-  font-size: 0.58rem; letter-spacing: 0.4em;
-  text-transform: uppercase; color: rgba(244,241,236,0.35);
-}
-.scroll-line {
-  width: 1px; height: 35px;
-  background: linear-gradient(to bottom, rgba(200,169,110,0.6), transparent);
-  animation: scrollPulse 2.5s ease-in-out infinite;
-}
-
-/* ── INTRO ────────────────────────────────────────────── */
-#intro {
-  padding: 10rem 4rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  align-items: center;
-}
-.intro-label {
-  font-size: 0.62rem; letter-spacing: 0.45em;
-  text-transform: uppercase; color: var(--gold);
-  margin-bottom: 1.5rem;
-}
-.intro-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300; font-size: clamp(2.4rem, 3.5vw, 3.5rem);
-  line-height: 1.15; color: var(--white); margin-bottom: 2rem;
-}
-.intro-title em { font-style: italic; color: var(--gold-light); }
-.intro-body {
-  font-size: 0.88rem; line-height: 1.9;
-  color: rgba(244,241,236,0.55); margin-bottom: 2rem;
-}
-.intro-link {
-  font-size: 0.62rem; letter-spacing: 0.28em;
-  text-transform: uppercase; color: var(--gold);
-  text-decoration: none; border-bottom: 1px solid rgba(200,169,110,0.3);
-  padding-bottom: 0.2rem; transition: border-color 0.3s;
-}
-.intro-link:hover { border-color: var(--gold); }
-.intro-stats {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
-}
-.stat-box {
-  background: var(--navy-mid);
-  padding: 2.5rem 2rem;
-  border: 1px solid rgba(200,169,110,0.06);
-  transition: border-color 0.3s;
-}
-.stat-box:hover { border-color: rgba(200,169,110,0.2); }
-.stat-num {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 3rem; font-weight: 300;
-  color: var(--gold); line-height: 1;
-  margin-bottom: 0.4rem;
-}
-.stat-unit { font-size: 1.1rem; }
-.stat-label {
-  font-size: 0.62rem; letter-spacing: 0.22em;
-  text-transform: uppercase; color: rgba(244,241,236,0.4);
-}
-
-/* ── DIVIDER ─────────────────────────────────────────── */
-.section-divider {
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(200,169,110,0.2), transparent);
-}
-
-/* ── FEATURES ────────────────────────────────────────── */
-#features {
-  padding: 8rem 4rem;
-  background: var(--navy-mid);
-}
-.features-header {
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto 5rem;
-}
-.section-label {
-  font-size: 0.62rem; letter-spacing: 0.45em;
-  text-transform: uppercase; color: var(--gold);
-  margin-bottom: 1.2rem;
-}
-.section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300; font-size: clamp(2rem, 3vw, 3rem);
-  line-height: 1.2; color: var(--white);
-}
-.section-title em { font-style: italic; }
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: rgba(200,169,110,0.06);
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.feat {
-  background: var(--navy-mid);
-  padding: 3rem 2.5rem;
-  position: relative;
-  overflow: hidden;
-  transition: background 0.4s;
-}
-.feat::before {
-  content: '';
-  position: absolute; top: 0; left: 0;
-  width: 0; height: 2px;
-  background: var(--gold);
-  transition: width 0.5s;
-}
-.feat:hover { background: var(--navy-light); }
-.feat:hover::before { width: 100%; }
-.feat-num {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 0.75rem; color: rgba(200,169,110,0.3);
-  letter-spacing: 0.2em; margin-bottom: 2rem;
-  font-style: italic;
-}
-.feat-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.4rem; font-weight: 400;
-  color: var(--white); margin-bottom: 1rem;
-  line-height: 1.3;
-}
-.feat-desc {
-  font-size: 0.82rem; line-height: 1.8;
-  color: rgba(244,241,236,0.5);
-}
-
-/* ── SPECS ───────────────────────────────────────────── */
-#specs {
-  padding: 8rem 4rem;
-  background: var(--navy);
-}
-.specs-inner {
-  max-width: 1200px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 2fr; gap: 6rem;
-  align-items: start;
-}
-.specs-left { position: sticky; top: 8rem; }
-.specs-intro {
-  font-size: 0.82rem; line-height: 1.9;
-  color: rgba(244,241,236,0.5); margin-top: 1.5rem;
-}
-.specs-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  border-top: 1px solid rgba(200,169,110,0.1);
-}
-.spec-row {
-  padding: 2rem 0;
-  border-bottom: 1px solid rgba(200,169,110,0.08);
-  display: flex; flex-direction: column; gap: 0.4rem;
-}
-.spec-row:nth-child(odd) { padding-right: 2rem; border-right: 1px solid rgba(200,169,110,0.08); }
-.spec-row:nth-child(even) { padding-left: 2rem; }
-.spec-val {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 2.2rem; font-weight: 300;
-  color: var(--gold); line-height: 1;
-}
-.spec-unit { font-size: 0.85rem; color: rgba(200,169,110,0.6); }
-.spec-key {
-  font-size: 0.62rem; letter-spacing: 0.22em;
-  text-transform: uppercase; color: rgba(244,241,236,0.4);
-}
-
-/* ── PROCESS ─────────────────────────────────────────── */
-#process {
-  padding: 8rem 4rem;
-  background: var(--navy-mid);
-}
-.process-inner { max-width: 1000px; margin: 0 auto; }
-.process-header { text-align: center; margin-bottom: 5rem; }
-.process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
-.process-steps::before {
-  content: ''; position: absolute;
-  top: 1.75rem; left: 12.5%; right: 12.5%;
-  height: 1px; background: linear-gradient(to right, var(--gold), rgba(200,169,110,0.2));
-}
-.step { text-align: center; padding: 0 1.5rem; }
-.step-num {
-  width: 3.5rem; height: 3.5rem;
-  border: 1px solid rgba(200,169,110,0.3);
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 1.8rem;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.1rem; color: var(--gold);
-  background: var(--navy-mid);
-  position: relative; z-index: 1;
-  transition: all 0.3s;
-}
-.step:hover .step-num { background: var(--gold); color: var(--navy); border-color: var(--gold); }
-.step-title {
-  font-size: 0.7rem; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--white);
-  margin-bottom: 0.8rem;
-}
-.step-desc { font-size: 0.8rem; line-height: 1.7; color: rgba(244,241,236,0.45); }
-
-/* ── CTA ─────────────────────────────────────────────── */
-#cta {
-  padding: 10rem 4rem;
-  background: var(--navy);
-  text-align: center;
-  position: relative; overflow: hidden;
-}
-#cta::before {
-  content: '';
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(200,169,110,0.06) 0%, transparent 70%);
-  pointer-events: none;
-}
-.cta-eyebrow {
-  font-size: 0.62rem; letter-spacing: 0.45em;
-  text-transform: uppercase; color: var(--gold);
-  margin-bottom: 1.5rem; position: relative; z-index: 1;
-}
-.cta-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300; font-size: clamp(3rem, 6vw, 5.5rem);
-  line-height: 1.05; color: var(--white);
-  margin-bottom: 1.5rem; position: relative; z-index: 1;
-}
-.cta-title em { font-style: italic; color: var(--gold-light); }
-.cta-sub {
-  font-size: 0.82rem; color: rgba(244,241,236,0.45);
-  margin-bottom: 3rem; position: relative; z-index: 1;
-  letter-spacing: 0.05em;
-}
-.cta-actions { display: flex; justify-content: center; gap: 1rem; position: relative; z-index: 1; }
-
-/* ── FOOTER ──────────────────────────────────────────── */
-footer {
-  padding: 2.5rem 4rem;
-  background: var(--navy);
-  border-top: 1px solid rgba(200,169,110,0.08);
-  display: flex; justify-content: space-between; align-items: center;
-}
-.footer-logo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 0.9rem; letter-spacing: 0.2em;
-  text-transform: uppercase; color: rgba(244,241,236,0.4);
-}
-.footer-txt {
-  font-size: 0.62rem; letter-spacing: 0.2em;
-  text-transform: uppercase; color: rgba(244,241,236,0.25);
-}
-
-/* ── ANIMATIONS ──────────────────────────────────────── */
-@keyframes heroReveal {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes scrollPulse { 0%,100%{opacity:0.3}50%{opacity:0.8} }
-
-/* ── RESPONSIVE ──────────────────────────────────────── */
-@media (max-width: 900px) {
-  #nav { padding: 1.2rem 1.5rem; }
-  #nav.scrolled { padding: 0.9rem 1.5rem; }
-  .nav-links, .nav-cta { display: none; }
-  #intro { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 1.5rem; }
-  #features { padding: 5rem 1.5rem; }
-  .features-grid { grid-template-columns: 1fr; }
-  #specs { padding: 5rem 1.5rem; }
-  .specs-inner { grid-template-columns: 1fr; gap: 3rem; }
-  .specs-left { position: static; }
-  #process { padding: 5rem 1.5rem; }
-  .process-steps { grid-template-columns: repeat(2,1fr); gap: 2rem; }
-  .process-steps::before { display: none; }
-  #cta { padding: 6rem 1.5rem; }
-  footer { flex-direction: column; gap: 0.8rem; padding: 2rem 1.5rem; text-align: center; }
-  #hero { min-height: 100svh; }
-  #viewer-controls { bottom: 9.5rem; }
+:root{--navy:#080D14;--navy-mid:#0D1520;--navy-light:#162030;--blue:#1A4A7A;--gold:#C8A96E;--gold-light:#E4C98A;--white:#F4F1EC;--grey:#8A9BAD}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--navy);color:var(--white);font-family:'Montserrat',sans-serif;font-weight:300;overflow-x:hidden}
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.8rem 4rem;transition:background .5s,padding .4s}
+#nav.scrolled{background:rgba(8,13,20,.97);backdrop-filter:blur(12px);padding:1.2rem 4rem;border-bottom:1px solid rgba(200,169,110,.1)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.15rem;letter-spacing:.22em;text-transform:uppercase;color:var(--white);text-decoration:none}
+.nav-logo span{color:var(--gold);font-style:italic}
+.nav-links{display:flex;gap:3rem;list-style:none}
+.nav-links a{font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(244,241,236,.55);text-decoration:none;transition:color .3s}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,169,110,.4);padding:.6rem 1.6rem;text-decoration:none;transition:all .3s}
+.nav-cta:hover{background:var(--gold);color:var(--navy)}
+/* HERO */
+#hero{position:relative;height:100vh;min-height:700px;overflow:hidden;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+#three-canvas{position:absolute;inset:0;width:100%;height:100%}
+#hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 60%,transparent 40%,rgba(8,13,20,.65) 100%),linear-gradient(to bottom,rgba(8,13,20,.35) 0%,transparent 25%,transparent 65%,rgba(8,13,20,.98) 100%);pointer-events:none;z-index:1}
+.hero-text{position:relative;z-index:2;text-align:center;padding:0 2rem 5rem;opacity:0;animation:fadeUp 1.4s ease .8s forwards}
+.hero-eyebrow{font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.5rem,7vw,6.5rem);line-height:1;color:var(--white);margin-bottom:.3rem}
+.hero-title em{font-style:italic;color:var(--gold-light)}
+.hero-sub{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(244,241,236,.5);margin-bottom:2.5rem}
+.hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;background:var(--gold);color:var(--navy);padding:.9rem 2.4rem;text-decoration:none;transition:all .3s;font-family:'Montserrat',sans-serif;font-weight:400;border:none;cursor:pointer}
+.btn-primary:hover{background:var(--gold-light)}
+.btn-ghost{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;background:transparent;color:var(--white);padding:.9rem 2.4rem;text-decoration:none;border:1px solid rgba(244,241,236,.3);transition:all .3s;font-family:'Montserrat',sans-serif;font-weight:300}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+#load-overlay{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;background:var(--navy);transition:opacity .8s}
+#load-overlay.gone{opacity:0;pointer-events:none}
+.load-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:300}
+.load-bar{width:180px;height:1px;background:rgba(200,169,110,.15)}
+.load-fill{height:100%;background:var(--gold);width:0%;transition:width .3s}
+.load-txt{font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--grey)}
+.scroll-ind{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp 1s ease 2s forwards}
+.scroll-ind span{font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;color:rgba(244,241,236,.35)}
+.scroll-line{width:1px;height:35px;background:linear-gradient(to bottom,rgba(200,169,110,.6),transparent);animation:scrollPulse 2.5s ease-in-out infinite}
+/* DIVIDER */
+.divider{width:100%;height:1px;background:linear-gradient(to right,transparent,rgba(200,169,110,.2),transparent)}
+/* INTRO */
+#intro{padding:10rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:6rem;max-width:1200px;margin:0 auto;align-items:center}
+.intro-label{font-size:.62rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem}
+.intro-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.4rem,3.5vw,3.5rem);line-height:1.15;color:var(--white);margin-bottom:2rem}
+.intro-title em{font-style:italic;color:var(--gold-light)}
+.intro-body{font-size:.88rem;line-height:1.9;color:rgba(244,241,236,.55);margin-bottom:1.2rem}
+.intro-link{font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(200,169,110,.3);padding-bottom:.2rem;transition:border-color .3s;display:inline-block;margin-top:.8rem}
+.intro-link:hover{border-color:var(--gold)}
+.intro-stats{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.stat-box{background:var(--navy-mid);padding:2.5rem 2rem;border:1px solid rgba(200,169,110,.06);transition:border-color .3s}
+.stat-box:hover{border-color:rgba(200,169,110,.2)}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--gold);line-height:1;margin-bottom:.4rem}
+.stat-unit{font-size:1.1rem}
+.stat-label{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(244,241,236,.4)}
+/* FEATURES */
+#features{padding:8rem 4rem;background:var(--navy-mid)}
+.section-header{text-align:center;max-width:600px;margin:0 auto 5rem}
+.section-label{font-size:.62rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.section-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,3vw,3rem);line-height:1.2;color:var(--white)}
+.section-title em{font-style:italic}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,169,110,.06);max-width:1200px;margin:0 auto}
+.feat{background:var(--navy-mid);padding:3rem 2.5rem;position:relative;overflow:hidden;transition:background .4s}
+.feat::before{content:'';position:absolute;top:0;left:0;width:0;height:2px;background:var(--gold);transition:width .5s}
+.feat:hover{background:var(--navy-light)}
+.feat:hover::before{width:100%}
+.feat-num{font-family:'Cormorant Garamond',serif;font-size:.75rem;color:rgba(200,169,110,.3);letter-spacing:.2em;margin-bottom:2rem;font-style:italic}
+.feat-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--white);margin-bottom:1rem;line-height:1.3}
+.feat-desc{font-size:.82rem;line-height:1.8;color:rgba(244,241,236,.5)}
+/* SPECS */
+#specs{padding:8rem 4rem;background:var(--navy)}
+.specs-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:6rem;align-items:start}
+.specs-left{position:sticky;top:8rem}
+.specs-intro{font-size:.82rem;line-height:1.9;color:rgba(244,241,236,.5);margin-top:1.5rem}
+.specs-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(200,169,110,.1)}
+.spec-row{padding:2rem 0;border-bottom:1px solid rgba(200,169,110,.08);display:flex;flex-direction:column;gap:.4rem}
+.spec-row:nth-child(odd){padding-right:2rem;border-right:1px solid rgba(200,169,110,.08)}
+.spec-row:nth-child(even){padding-left:2rem}
+.spec-val{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--gold);line-height:1}
+.spec-unit{font-size:.85rem;color:rgba(200,169,110,.6)}
+.spec-key{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(244,241,236,.4)}
+/* EXPLORE CTA */
+#explore-cta{padding:6rem 4rem;background:var(--navy-mid);display:flex;align-items:center;justify-content:space-between;max-width:none;gap:4rem}
+.explore-inner{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;gap:4rem}
+.explore-text h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,3vw,3rem);color:var(--white);margin-bottom:.8rem}
+.explore-text h2 em{font-style:italic;color:var(--gold-light)}
+.explore-text p{font-size:.82rem;color:rgba(244,241,236,.5);line-height:1.7;max-width:500px}
+/* PROCESS */
+#process{padding:8rem 4rem;background:var(--navy)}
+.process-inner{max-width:1000px;margin:0 auto}
+.process-header{text-align:center;margin-bottom:5rem}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.process-steps::before{content:'';position:absolute;top:1.75rem;left:12.5%;right:12.5%;height:1px;background:linear-gradient(to right,var(--gold),rgba(200,169,110,.2))}
+.step{text-align:center;padding:0 1.5rem}
+.step-num{width:3.5rem;height:3.5rem;border:1px solid rgba(200,169,110,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1.8rem;font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold);background:var(--navy);position:relative;z-index:1;transition:all .3s}
+.step:hover .step-num{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.step-title{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--white);margin-bottom:.8rem}
+.step-desc{font-size:.8rem;line-height:1.7;color:rgba(244,241,236,.45)}
+/* CTA */
+#cta{padding:10rem 4rem;background:var(--navy);text-align:center;position:relative;overflow:hidden}
+#cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(200,169,110,.06) 0%,transparent 70%);pointer-events:none}
+.cta-eyebrow{font-size:.62rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;position:relative;z-index:1}
+.cta-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3rem,6vw,5.5rem);line-height:1.05;color:var(--white);margin-bottom:1.5rem;position:relative;z-index:1}
+.cta-title em{font-style:italic;color:var(--gold-light)}
+.cta-sub{font-size:.82rem;color:rgba(244,241,236,.45);margin-bottom:3rem;position:relative;z-index:1}
+.cta-actions{display:flex;justify-content:center;gap:1rem;position:relative;z-index:1;flex-wrap:wrap}
+/* FOOTER */
+footer{padding:2.5rem 4rem;background:var(--navy);border-top:1px solid rgba(200,169,110,.08);display:flex;justify-content:space-between;align-items:center}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:.9rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,241,236,.4)}
+.footer-txt{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,241,236,.25)}
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scrollPulse{0%,100%{opacity:.3}50%{opacity:.8}}
+/* RESPONSIVE */
+@media(max-width:900px){
+  #nav{padding:1.2rem 1.5rem}#nav.scrolled{padding:.9rem 1.5rem}
+  .nav-links,.nav-cta{display:none}
+  #intro{grid-template-columns:1fr;gap:3rem;padding:5rem 1.5rem}
+  #features{padding:5rem 1.5rem}.feat-grid{grid-template-columns:1fr}
+  #specs{padding:5rem 1.5rem}.specs-inner{grid-template-columns:1fr;gap:3rem}.specs-left{position:static}
+  #explore-cta{padding:4rem 1.5rem}.explore-inner{flex-direction:column;text-align:center}
+  #process{padding:5rem 1.5rem}.process-steps{grid-template-columns:repeat(2,1fr);gap:2rem}.process-steps::before{display:none}
+  #cta{padding:6rem 1.5rem}
+  footer{flex-direction:column;gap:.8rem;padding:2rem 1.5rem;text-align:center}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav id="nav">
-  <a href="#" class="nav-logo">Blackman <span>Campervans</span></a>
+  <a href="index.html" class="nav-logo">Blackman <span>Campervans</span></a>
   <ul class="nav-links">
     <li><a href="#intro">About</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#specs">Specifications</a></li>
     <li><a href="#process">Process</a></li>
+    <li><a href="explore.html">Explore the Build</a></li>
   </ul>
   <a href="mailto:hello@blackmancampervans.com.au" class="nav-cta">Enquire</a>
 </nav>
 
-<!-- HERO with 3D Viewer -->
 <section id="hero">
   <canvas id="three-canvas"></canvas>
-
   <div id="load-overlay">
     <div class="load-logo">Blackman</div>
     <div class="load-bar"><div class="load-fill" id="load-fill"></div></div>
     <div class="load-txt" id="load-txt">Preparing your experience</div>
   </div>
-
-  <div id="viewer-controls">
-    <button class="vc-btn" onclick="zoomIn()">+ Zoom</button>
-    <button class="vc-btn" onclick="zoomOut()">− Zoom</button>
-    <div class="vc-sep"></div>
-    <button class="vc-btn" id="vc-pan" onclick="togglePan()">Pan</button>
-    <button class="vc-btn on" id="vc-auto" onclick="toggleAuto()">Auto Rotate</button>
-    <button class="vc-btn" onclick="resetCam()">Reset</button>
-  </div>
-
   <div class="hero-text">
     <p class="hero-eyebrow">Handbuilt in New South Wales, Australia</p>
     <h1 class="hero-title">Built for<br><em>the Wild</em></h1>
-    <p class="hero-sub">Custom Campervans · Every Detail Considered</p>
+    <p class="hero-sub">Custom Campervans &middot; Every Detail Considered</p>
     <div class="hero-actions">
-      <a href="#intro" class="btn-primary">Explore the Build</a>
+      <a href="explore.html" class="btn-primary">Explore the Build</a>
       <a href="mailto:hello@blackmancampervans.com.au" class="btn-ghost">Request a Quote</a>
     </div>
   </div>
-
-  <div class="scroll-ind">
-    <div class="scroll-line"></div>
-    <span>Scroll</span>
-  </div>
+  <div class="scroll-ind"><div class="scroll-line"></div><span>Scroll</span></div>
 </section>
 
-<!-- INTRO -->
-<div class="section-divider"></div>
+<div class="divider"></div>
 <section id="intro">
   <div>
     <p class="intro-label">The Blackman Philosophy</p>
     <h2 class="intro-title">Where craft meets<br><em>the open road</em></h2>
     <p class="intro-body">Every Blackman campervan begins with a conversation and ends with a vehicle that is entirely yours. Built by hand in our NSW workshop, each build reflects the landscape it was made for — rugged enough for the outback, refined enough for wherever life takes you.</p>
     <p class="intro-body">We build around ten vans a year, and we intend to keep it that way. The limitation is the point.</p>
-    <a href="#process" class="intro-link">How it works</a>
+    <a href="explore.html" class="intro-link">Explore the build in 3D &rarr;</a>
   </div>
   <div class="intro-stats">
-    <div class="stat-box">
-      <div class="stat-num">200<span class="stat-unit">Ah</span></div>
-      <p class="stat-label">LiFePO₄ Battery</p>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num">400<span class="stat-unit">W</span></div>
-      <p class="stat-label">Solar Input</p>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num">12<span class="stat-unit">wk</span></div>
-      <p class="stat-label">Build Time</p>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num">10<span class="stat-unit">/yr</span></div>
-      <p class="stat-label">Builds Per Year</p>
-    </div>
+    <div class="stat-box"><div class="stat-num">200<span class="stat-unit">Ah</span></div><p class="stat-label">LiFePO&#8322; Battery</p></div>
+    <div class="stat-box"><div class="stat-num">400<span class="stat-unit">W</span></div><p class="stat-label">Solar Input</p></div>
+    <div class="stat-box"><div class="stat-num">12<span class="stat-unit">wk</span></div><p class="stat-label">Build Time</p></div>
+    <div class="stat-box"><div class="stat-num">10<span class="stat-unit">/yr</span></div><p class="stat-label">Builds Per Year</p></div>
   </div>
 </section>
+<div class="divider"></div>
 
-<div class="section-divider"></div>
-
-<!-- FEATURES -->
 <section id="features">
-  <div class="features-header">
+  <div class="section-header">
     <p class="section-label">Craftsmanship</p>
     <h2 class="section-title">Every detail<br><em>considered</em></h2>
   </div>
-  <div class="features-grid">
-    <div class="feat">
-      <p class="feat-num">01</p>
-      <h3 class="feat-title">Off-Grid Electrical</h3>
-      <p class="feat-desc">LiFePO₄ lithium batteries, dual solar input, MPPT controller, and a full 240V inverter. Weeks of power without a plug.</p>
-    </div>
-    <div class="feat">
-      <p class="feat-num">02</p>
-      <h3 class="feat-title">Full Kitchen</h3>
-      <p class="feat-desc">Induction cooktop, 12V compressor fridge, oak benchtop, and storage designed around how people actually cook on the road.</p>
-    </div>
-    <div class="feat">
-      <p class="feat-num">03</p>
-      <h3 class="feat-title">Hot Shower</h3>
-      <p class="feat-desc">On-demand hot water system, discreet wet bath or outdoor shower connection. Comfort that follows you everywhere.</p>
-    </div>
-    <div class="feat">
-      <p class="feat-num">04</p>
-      <h3 class="feat-title">Custom Cabinetry</h3>
-      <p class="feat-desc">Handbuilt linen-finish cabinetry with birch ply edges. Every drawer, door, and shelf designed for your specific needs.</p>
-    </div>
-    <div class="feat">
-      <p class="feat-num">05</p>
-      <h3 class="feat-title">Climate Control</h3>
-      <p class="feat-desc">Spray foam and rigid board insulation throughout. Designed for Australian conditions — cold highlands, coastal humidity, desert heat.</p>
-    </div>
-    <div class="feat">
-      <p class="feat-num">06</p>
-      <h3 class="feat-title">Compliance Ready</h3>
-      <p class="feat-desc">Full NSW registration, engineer certification, and dealer-licensed build process. You drive it the day it is handed over.</p>
-    </div>
+  <div class="feat-grid">
+    <div class="feat"><p class="feat-num">01</p><h3 class="feat-title">Off-Grid Electrical</h3><p class="feat-desc">LiFePO&#8322; lithium batteries, dual solar input, MPPT controller, and a full 240V inverter. Weeks of power without a plug.</p></div>
+    <div class="feat"><p class="feat-num">02</p><h3 class="feat-title">Full Kitchen</h3><p class="feat-desc">Induction cooktop, 12V compressor fridge, oak benchtop, and storage designed around how people actually cook on the road.</p></div>
+    <div class="feat"><p class="feat-num">03</p><h3 class="feat-title">Hot Shower</h3><p class="feat-desc">On-demand hot water, discreet wet bath or outdoor shower connection. Comfort that follows you everywhere.</p></div>
+    <div class="feat"><p class="feat-num">04</p><h3 class="feat-title">Custom Cabinetry</h3><p class="feat-desc">Handbuilt linen-finish cabinetry with birch ply edges. Every drawer, door, and shelf designed for your specific needs.</p></div>
+    <div class="feat"><p class="feat-num">05</p><h3 class="feat-title">Climate Control</h3><p class="feat-desc">Spray foam and rigid board insulation throughout. Designed for Australian conditions — cold highlands, coastal humidity, desert heat.</p></div>
+    <div class="feat"><p class="feat-num">06</p><h3 class="feat-title">Compliance Ready</h3><p class="feat-desc">Full NSW registration, engineer certification, and dealer-licensed build process. You drive it the day it is handed over.</p></div>
   </div>
 </section>
+<div class="divider"></div>
 
-<div class="section-divider"></div>
-
-<!-- SPECS -->
 <section id="specs">
   <div class="specs-inner">
     <div class="specs-left">
@@ -623,37 +207,28 @@ footer {
       <p class="specs-intro">Every specification reflects a deliberate choice. Nothing is standard. Everything is selected for the Australian environment and the demands of extended off-grid travel.</p>
     </div>
     <div class="specs-grid">
-      <div class="spec-row">
-        <div class="spec-val">200<span class="spec-unit">Ah</span></div>
-        <p class="spec-key">LiFePO₄ Battery</p>
-      </div>
-      <div class="spec-row">
-        <div class="spec-val">400<span class="spec-unit">W</span></div>
-        <p class="spec-key">Solar Panels</p>
-      </div>
-      <div class="spec-row">
-        <div class="spec-val">3<span class="spec-unit">kW</span></div>
-        <p class="spec-key">Inverter Output</p>
-      </div>
-      <div class="spec-row">
-        <div class="spec-val">60<span class="spec-unit">L</span></div>
-        <p class="spec-key">Fresh Water</p>
-      </div>
-      <div class="spec-row">
-        <div class="spec-val">12<span class="spec-unit">wk</span></div>
-        <p class="spec-key">Build Time</p>
-      </div>
-      <div class="spec-row">
-        <div class="spec-val">100<span class="spec-unit">%</span></div>
-        <p class="spec-key">Custom to You</p>
-      </div>
+      <div class="spec-row"><div class="spec-val">200<span class="spec-unit">Ah</span></div><p class="spec-key">LiFePO&#8322; Battery</p></div>
+      <div class="spec-row"><div class="spec-val">400<span class="spec-unit">W</span></div><p class="spec-key">Solar Panels</p></div>
+      <div class="spec-row"><div class="spec-val">3<span class="spec-unit">kW</span></div><p class="spec-key">Inverter Output</p></div>
+      <div class="spec-row"><div class="spec-val">60<span class="spec-unit">L</span></div><p class="spec-key">Fresh Water</p></div>
+      <div class="spec-row"><div class="spec-val">12<span class="spec-unit">wk</span></div><p class="spec-key">Build Time</p></div>
+      <div class="spec-row"><div class="spec-val">100<span class="spec-unit">%</span></div><p class="spec-key">Custom to You</p></div>
     </div>
   </div>
 </section>
+<div class="divider"></div>
 
-<div class="section-divider"></div>
+<section id="explore-cta">
+  <div class="explore-inner">
+    <div class="explore-text">
+      <h2>See every angle,<br><em>inside and out</em></h2>
+      <p>Our interactive 3D viewer lets you explore the full build in detail. Rotate, zoom, and pan your way through the exterior and interior — on any device.</p>
+    </div>
+    <a href="explore.html" class="btn-primary" style="white-space:nowrap;flex-shrink:0">Open 3D Explorer &rarr;</a>
+  </div>
+</section>
+<div class="divider"></div>
 
-<!-- PROCESS -->
 <section id="process">
   <div class="process-inner">
     <div class="process-header">
@@ -661,365 +236,226 @@ footer {
       <h2 class="section-title">Your build,<br><em>your way</em></h2>
     </div>
     <div class="process-steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <p class="step-title">Consultation</p>
-        <p class="step-desc">We talk through your travel style, must-haves, and budget in detail</p>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <p class="step-title">Design</p>
-        <p class="step-desc">A custom layout is drawn up and every material and specification confirmed</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <p class="step-title">Build</p>
-        <p class="step-desc">Twelve weeks of handcrafted construction in our New South Wales workshop</p>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <p class="step-title">Handover</p>
-        <p class="step-desc">Full walkthrough, compliance complete. You drive away the same day</p>
-      </div>
+      <div class="step"><div class="step-num">1</div><p class="step-title">Consultation</p><p class="step-desc">We talk through your travel style, must-haves, and budget in detail</p></div>
+      <div class="step"><div class="step-num">2</div><p class="step-title">Design</p><p class="step-desc">A custom layout is drawn up and every material and specification confirmed</p></div>
+      <div class="step"><div class="step-num">3</div><p class="step-title">Build</p><p class="step-desc">Twelve weeks of handcrafted construction in our New South Wales workshop</p></div>
+      <div class="step"><div class="step-num">4</div><p class="step-title">Handover</p><p class="step-desc">Full walkthrough, compliance complete. You drive away the same day</p></div>
     </div>
   </div>
 </section>
+<div class="divider"></div>
 
-<div class="section-divider"></div>
-
-<!-- CTA -->
 <section id="cta">
-  <p class="cta-eyebrow">Limited availability · NSW, Australia</p>
+  <p class="cta-eyebrow">Limited availability &middot; NSW, Australia</p>
   <h2 class="cta-title">Ready to begin<br><em>your build?</em></h2>
   <p class="cta-sub">We take on a small number of builds each year. Reach out to start the conversation.</p>
   <div class="cta-actions">
     <a href="mailto:hello@blackmancampervans.com.au" class="btn-primary">Get in Touch</a>
-    <a href="#hero" class="btn-ghost">View the Van</a>
+    <a href="explore.html" class="btn-ghost">Explore the Van</a>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-logo">Blackman Campervans</div>
-  <p class="footer-txt">NSW Australia · Handbuilt · Est. 2020</p>
+  <p class="footer-txt">NSW Australia &middot; Handbuilt</p>
 </footer>
 
-<!-- THREE.JS -->
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
-// Nav scroll behaviour
-window.addEventListener('scroll', function() {
-  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+window.addEventListener('scroll',function(){
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50);
 });
 
-// ── 3D SCENE ────────────────────────────────────────────
-var theta = 0.3, phi = 0.9, radius = 9;
-var autoRot = true, panMode = false;
-var drag = false, lx = 0, ly = 0;
-var renderer, scene, camera, target;
+var renderer,scene,camera,target;
+var theta=0.3,scrollTheta=0,phi=0.88,radius=10;
+var vanLoaded=false;
 
-function setup() {
-  var canvas = document.getElementById('three-canvas');
-  var w = canvas.clientWidth;
-  var h = canvas.clientHeight;
+function setup(){
+  var cv=document.getElementById('three-canvas');
+  renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:false});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setClearColor(0x080D14,1);
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.outputEncoding=THREE.sRGBEncoding;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.5;
 
-  renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, alpha: false});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setClearColor(0x080D14, 1);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.5;
-  renderer.setSize(w, h, false);
+  var w=cv.clientWidth,h=cv.clientHeight;
+  renderer.setSize(w,h,false);
+  scene=new THREE.Scene();
+  camera=new THREE.PerspectiveCamera(40,w/h,0.01,300);
+  target=new THREE.Vector3(0,0.7,0);
 
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(40, w / h, 0.01, 200);
-  target = new THREE.Vector3(0, 0.7, 0);
+  // Lighting
+  scene.add(new THREE.AmbientLight(0xCCDDFF,0.25));
+  var key=new THREE.DirectionalLight(0xFFEEDD,3.0);
+  key.position.set(7,9,5);key.castShadow=true;
+  key.shadow.mapSize.set(2048,2048);
+  key.shadow.camera.near=0.5;key.shadow.camera.far=35;
+  key.shadow.camera.left=-7;key.shadow.camera.right=7;
+  key.shadow.camera.top=7;key.shadow.camera.bottom=-7;
+  key.shadow.bias=-0.001;scene.add(key);
+  var fill=new THREE.DirectionalLight(0x7799CC,0.9);fill.position.set(-8,5,2);scene.add(fill);
+  var rim=new THREE.DirectionalLight(0x99BBDD,1.4);rim.position.set(-1,7,-10);scene.add(rim);
+  scene.add(new THREE.HemisphereLight(0x223355,0x080D14,0.5));
 
-  // ── LIGHTING ─────────────────────────────────────────
-  scene.add(new THREE.AmbientLight(0xCCDDFF, 0.25));
+  // ── ROAD ─────────────────────────────────────────────────────────
+  // Road surface
+  var roadMat=new THREE.MeshStandardMaterial({color:0x1A1A1A,roughness:0.9,metalness:0.05});
+  var road=new THREE.Mesh(new THREE.PlaneGeometry(7,200),roadMat);
+  road.rotation.x=-Math.PI/2;road.receiveShadow=true;road.position.set(-1.5,-0.002,0);
+  scene.add(road);
 
-  var key = new THREE.DirectionalLight(0xFFEEDD, 3.0);
-  key.position.set(7, 9, 5);
-  key.castShadow = true;
-  key.shadow.mapSize.set(2048, 2048);
-  key.shadow.camera.near = 0.5;
-  key.shadow.camera.far = 35;
-  key.shadow.camera.left = -7;
-  key.shadow.camera.right = 7;
-  key.shadow.camera.top = 7;
-  key.shadow.camera.bottom = -7;
-  key.shadow.bias = -0.001;
-  scene.add(key);
+  // Surrounding ground (darker dirt/verge)
+  var groundMat=new THREE.MeshStandardMaterial({color:0x111108,roughness:0.98});
+  var ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),groundMat);
+  ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;ground.position.y=-0.003;
+  scene.add(ground);
 
-  var fill = new THREE.DirectionalLight(0x7799CC, 0.9);
-  fill.position.set(-8, 5, 2);
-  scene.add(fill);
+  // White edge lines - left edge
+  var lineMat=new THREE.MeshBasicMaterial({color:0xFFFFFF});
+  var leftLine=new THREE.Mesh(new THREE.PlaneGeometry(0.12,200),lineMat);
+  leftLine.rotation.x=-Math.PI/2;leftLine.position.set(-4.9,0.001,0);
+  scene.add(leftLine);
+  // Right edge
+  var rightLine=new THREE.Mesh(new THREE.PlaneGeometry(0.12,200),lineMat);
+  rightLine.rotation.x=-Math.PI/2;rightLine.position.set(1.9,0.001,0);
+  scene.add(rightLine);
 
-  var rim = new THREE.DirectionalLight(0x99BBDD, 1.4);
-  rim.position.set(-1, 7, -10);
-  scene.add(rim);
+  // Centre dashed line
+  var dashMat=new THREE.MeshBasicMaterial({color:0xFFFFFF});
+  for(var di=-20;di<20;di++){
+    var dash=new THREE.Mesh(new THREE.PlaneGeometry(0.1,1.2),dashMat);
+    dash.rotation.x=-Math.PI/2;
+    dash.position.set(-1.5,0.001,di*3.5);
+    scene.add(dash);
+  }
 
-  scene.add(new THREE.HemisphereLight(0x223355, 0x080D14, 0.5));
-
-  // ── FLOOR ────────────────────────────────────────────
-  var floorMat = new THREE.MeshStandardMaterial({
-    color: 0x080D14, roughness: 0.03, metalness: 0.9
-  });
-  var floor = new THREE.Mesh(new THREE.PlaneGeometry(50, 50), floorMat);
-  floor.rotation.x = -Math.PI / 2;
-  floor.receiveShadow = true;
-  floor.position.y = -0.002;
-  scene.add(floor);
-
-  // Glow rings on floor
-  var ringMat = new THREE.MeshBasicMaterial({
-    color: 0x1A4A7A, side: THREE.DoubleSide,
-    transparent: true, opacity: 0.25
-  });
-  for (var i = 0; i < 4; i++) {
-    var ring = new THREE.Mesh(
-      new THREE.RingGeometry(1.8 + i * 1.8, 1.9 + i * 1.8, 64),
-      new THREE.MeshBasicMaterial({color: 0x1A4A7A, side: THREE.DoubleSide, transparent: true, opacity: 0.18 - i * 0.04})
+  // Glow rings under van
+  for(var i=0;i<3;i++){
+    var ring=new THREE.Mesh(
+      new THREE.RingGeometry(1.6+i*1.5,1.68+i*1.5,64),
+      new THREE.MeshBasicMaterial({color:0x1A4A7A,side:THREE.DoubleSide,transparent:true,opacity:0.15-i*0.04})
     );
-    ring.rotation.x = -Math.PI / 2;
-    ring.position.y = 0.001;
+    ring.rotation.x=-Math.PI/2;ring.position.set(-1.5,0.001,0);
     scene.add(ring);
   }
 
-  // ── DARK SKY ─────────────────────────────────────────
-  var skyGeo = new THREE.SphereGeometry(90, 32, 16);
-  var skyMat = new THREE.ShaderMaterial({
-    uniforms: {
-      top: {value: new THREE.Color(0x020408)},
-      mid: {value: new THREE.Color(0x060D18)},
-      hor: {value: new THREE.Color(0x0D1E30)}
-    },
-    vertexShader: 'varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
-    fragmentShader: 'uniform vec3 top,mid,hor;varying vec3 vP;void main(){float h=normalize(vP).y;vec3 c=h>0.15?mix(mid,top,smoothstep(0.15,0.7,h)):mix(hor,mid,smoothstep(-0.1,0.15,h));gl_FragColor=vec4(c,1.0);}',
-    side: THREE.BackSide,
-    depthWrite: false
+  // Dark sky
+  var skyGeo=new THREE.SphereGeometry(180,32,16);
+  var skyMat=new THREE.ShaderMaterial({
+    uniforms:{top:{value:new THREE.Color(0x020408)},mid:{value:new THREE.Color(0x060D18)},hor:{value:new THREE.Color(0x0D1E30)}},
+    vertexShader:'varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+    fragmentShader:'uniform vec3 top,mid,hor;varying vec3 vP;void main(){float h=normalize(vP).y;vec3 c=h>0.15?mix(mid,top,smoothstep(0.15,0.7,h)):mix(hor,mid,smoothstep(-0.1,0.15,h));gl_FragColor=vec4(c,1.0);}',
+    side:THREE.BackSide,depthWrite:false
   });
-  scene.add(new THREE.Mesh(skyGeo, skyMat));
-
-  scene.fog = new THREE.FogExp2(0x080D14, 0.02);
+  scene.add(new THREE.Mesh(skyGeo,skyMat));
+  scene.fog=new THREE.FogExp2(0x080D14,0.018);
 
   updateCam();
   animate();
   loadGLB();
 }
 
-function updateCam() {
+function updateCam(){
+  var t=theta+scrollTheta;
   camera.position.set(
-    target.x + radius * Math.sin(phi) * Math.sin(theta),
-    target.y + radius * Math.cos(phi),
-    target.z + radius * Math.sin(phi) * Math.cos(theta)
+    target.x+radius*Math.sin(phi)*Math.sin(t),
+    target.y+radius*Math.cos(phi),
+    target.z+radius*Math.sin(phi)*Math.cos(t)
   );
   camera.lookAt(target);
 }
 
-function animate() {
+// Scroll-driven rotation
+window.addEventListener('scroll',function(){
+  var hero=document.getElementById('hero');
+  var heroH=hero.offsetHeight;
+  var scrollY=window.scrollY;
+  // Rotate 1.5 full turns as user scrolls through the hero height
+  scrollTheta=(scrollY/heroH)*Math.PI*3;
+  // Also slightly lower camera angle as scroll progresses
+  phi=Math.max(0.6,0.88-(scrollY/heroH)*0.25);
+  updateCam();
+});
+
+function animate(){
   requestAnimationFrame(animate);
-  if (autoRot) { theta += 0.003; updateCam(); }
-  renderer.render(scene, camera);
+  // Slow auto drift when not scrolling
+  if(vanLoaded && window.scrollY<50){theta+=0.003;updateCam();}
+  renderer.render(scene,camera);
 }
 
-function resize() {
-  var canvas = document.getElementById('three-canvas');
-  var w = canvas.clientWidth;
-  var h = canvas.clientHeight;
-  renderer.setSize(w, h, false);
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
+function resize(){
+  var cv=document.getElementById('three-canvas');
+  var w=cv.clientWidth,h=cv.clientHeight;
+  renderer.setSize(w,h,false);
+  camera.aspect=w/h;camera.updateProjectionMatrix();
 }
 
-function parseMatColor(n) {
-  if (!n) return null;
-  var nl = n.toLowerCase();
-  if (nl.indexOf('white') > -1) return {hex: 0xF4F4F4, rough: 0.2, metal: 0.0};
-  if (nl.indexOf('black') > -1 || nl.indexOf('oxide') > -1) return {hex: 0x111111, rough: 0.4, metal: 0.0};
-  if (nl.indexOf('oak') > -1) return {hex: 0xC4945A, rough: 0.65, metal: 0.0};
-  if (nl.indexOf('mahogany') > -1) return {hex: 0x7B3F2A, rough: 0.5, metal: 0.0};
-  if (nl.indexOf('bamboo') > -1) return {hex: 0xC8A96E, rough: 0.5, metal: 0.0};
-  if (nl.indexOf('steel') > -1 || nl.indexOf('satin') > -1) return {hex: 0xAAAAAA, rough: 0.25, metal: 0.85};
-  if (nl.indexOf('blue') > -1) return {hex: 0x2030A0, rough: 0.4, metal: 0.0};
-  if (nl.indexOf('led') > -1) return {hex: 0xFFFFEE, rough: 0.1, metal: 0.0};
-  var op = n.match(/Opaque\((\d+),(\d+),(\d+)\)/);
-  if (op) {
-    var r=parseInt(op[1]),g=parseInt(op[2]),b=parseInt(op[3]);
-    var br=(r+g+b)/3;
-    return {hex:(r<<16)|(g<<8)|b, rough:br<30?0.85:br>200?0.2:0.55, metal:br>80&&br<180&&Math.abs(r-g)<15&&Math.abs(g-b)<15?0.4:0.0};
-  }
-  var rgb = n.match(/^(\d+),(\d+),(\d+)/);
-  if (rgb) {
-    var r=parseInt(rgb[1]),g=parseInt(rgb[2]),b=parseInt(rgb[3]);
-    var br=(r+g+b)/3;
-    return {hex:(r<<16)|(g<<8)|b, rough:br<30?0.85:br>200?0.2:0.55, metal:br>80&&br<180&&Math.abs(r-g)<15&&Math.abs(g-b)<15?0.4:0.0};
-  }
+function parseMatColor(n){
+  if(!n)return null;
+  var nl=n.toLowerCase();
+  if(nl.indexOf('white')>-1)return{hex:0xF4F4F4,rough:0.2,metal:0.0};
+  if(nl.indexOf('black')>-1||nl.indexOf('oxide')>-1)return{hex:0x111111,rough:0.4,metal:0.0};
+  if(nl.indexOf('oak')>-1)return{hex:0xC4945A,rough:0.65,metal:0.0};
+  if(nl.indexOf('mahogany')>-1)return{hex:0x7B3F2A,rough:0.5,metal:0.0};
+  if(nl.indexOf('bamboo')>-1)return{hex:0xC8A96E,rough:0.5,metal:0.0};
+  if(nl.indexOf('steel')>-1||nl.indexOf('satin')>-1)return{hex:0xAAAAAA,rough:0.25,metal:0.85};
+  if(nl.indexOf('blue')>-1)return{hex:0x2030A0,rough:0.4,metal:0.0};
+  if(nl.indexOf('led')>-1)return{hex:0xFFFFEE,rough:0.1,metal:0.0};
+  var op=n.match(/Opaque\((\d+),(\d+),(\d+)\)/);
+  if(op){var r=parseInt(op[1]),g=parseInt(op[2]),b=parseInt(op[3]),br=(r+g+b)/3;return{hex:(r<<16)|(g<<8)|b,rough:br<30?0.85:br>200?0.2:0.55,metal:br>80&&br<180&&Math.abs(r-g)<15&&Math.abs(g-b)<15?0.4:0.0};}
+  var rgb=n.match(/^(\d+),(\d+),(\d+)/);
+  if(rgb){var r=parseInt(rgb[1]),g=parseInt(rgb[2]),b=parseInt(rgb[3]),br=(r+g+b)/3;return{hex:(r<<16)|(g<<8)|b,rough:br<30?0.85:br>200?0.2:0.55,metal:br>80&&br<180&&Math.abs(r-g)<15&&Math.abs(g-b)<15?0.4:0.0};}
   return null;
 }
 
-function loadGLB() {
-  var fill = document.getElementById('load-fill');
-  var txt = document.getElementById('load-txt');
-  var ov = document.getElementById('load-overlay');
-  fill.style.width = '8%';
-
-  new THREE.GLTFLoader().load('van_exterior.glb',
-    function(gltf) {
-      var mdl = gltf.scene;
-      var box = new THREE.Box3().setFromObject(mdl);
-      var size = box.getSize(new THREE.Vector3());
-      var centre = box.getCenter(new THREE.Vector3());
-      var maxDim = Math.max(size.x, size.y, size.z);
-      var scl = 5.0 / maxDim;
-      mdl.scale.set(scl, scl, scl);
-      mdl.position.set(-centre.x * scl, 0, -centre.z * scl);
-      var wrapper = new THREE.Group();
-      wrapper.add(mdl);
-      mdl.rotation.x = -Math.PI / 2;
-      scene.add(wrapper);
-      var wb = new THREE.Box3().setFromObject(wrapper);
-      wrapper.position.y = -wb.min.y;
-      scene.remove(wrapper);
-
-      // Apply colours
-      var matCache = {};
-      mdl.traverse(function(c) {
-        if (!c.isMesh) return;
-        c.castShadow = true;
-        c.receiveShadow = true;
-        var n = c.material ? (c.material.name || '') : '';
-        if (!matCache[n]) {
-          var p = parseMatColor(n);
-          if (p) {
-            var m = c.material.clone();
-            m.color.setHex(p.hex);
-            m.roughness = p.rough;
-            m.metalness = p.metal;
-            m.needsUpdate = true;
-            matCache[n] = m;
-          } else { matCache[n] = c.material; }
-        }
-        c.material = matCache[n];
-      });
-
-      scene.add(wrapper);
-      fill.style.width = '100%';
-      resize();
-      renderer.render(scene, camera);
-      setTimeout(function() {
-        ov.classList.add('gone');
-        resize();
-      }, 500);
-    },
-    function(xhr) {
-      if (xhr.total) {
-        var pct = xhr.loaded / xhr.total * 85;
-        fill.style.width = (8 + pct) + '%';
-        if (pct > 50) txt.textContent = 'Almost ready';
-      }
-    },
-    function(err) {
-      txt.textContent = 'Error loading model';
-      console.error(err);
-    }
-  );
+function loadGLB(){
+  var fill=document.getElementById('load-fill');
+  var txt=document.getElementById('load-txt');
+  var ov=document.getElementById('load-overlay');
+  fill.style.width='8%';
+  new THREE.GLTFLoader().load('van_exterior.glb',function(gltf){
+    var mdl=gltf.scene;
+    var box=new THREE.Box3().setFromObject(mdl);
+    var size=box.getSize(new THREE.Vector3());
+    var centre=box.getCenter(new THREE.Vector3());
+    var maxDim=Math.max(size.x,size.y,size.z);
+    var scl=5.0/maxDim;
+    mdl.scale.set(scl,scl,scl);
+    mdl.position.set(-centre.x*scl,0,-centre.z*scl);
+    var wrapper=new THREE.Group();
+    wrapper.add(mdl);
+    mdl.rotation.x=-Math.PI/2;
+    scene.add(wrapper);
+    var wb=new THREE.Box3().setFromObject(wrapper);
+    wrapper.position.y=-wb.min.y;
+    // Place van on left lane - offset to left of road centre
+    wrapper.position.x=-1.5;
+    scene.remove(wrapper);
+    var matCache={};
+    mdl.traverse(function(c){
+      if(!c.isMesh)return;
+      c.castShadow=true;c.receiveShadow=true;
+      var n=c.material?(c.material.name||''):'';
+      if(!matCache[n]){var p=parseMatColor(n);if(p){var m=c.material.clone();m.color.setHex(p.hex);m.roughness=p.rough;m.metalness=p.metal;m.needsUpdate=true;matCache[n]=m;}else matCache[n]=c.material;}
+      c.material=matCache[n];
+    });
+    scene.add(wrapper);
+    vanLoaded=true;
+    fill.style.width='100%';
+    resize();renderer.render(scene,camera);
+    setTimeout(function(){ov.classList.add('gone');resize();},500);
+  },function(xhr){
+    if(xhr.total){var pct=xhr.loaded/xhr.total*85;fill.style.width=(8+pct)+'%';if(pct>50)txt.textContent='Almost ready';}
+  },function(err){txt.textContent='Error loading model';console.error(err);});
 }
 
-// ── CONTROLS ────────────────────────────────────────────
-var cv = document.getElementById('three-canvas');
-cv.addEventListener('mousedown', function(e) {
-  drag = true; lx = e.clientX; ly = e.clientY;
-  autoRot = false;
-  document.getElementById('vc-auto').classList.remove('on');
-});
-window.addEventListener('mouseup', function() { drag = false; });
-window.addEventListener('mousemove', function(e) {
-  if (!drag) return;
-  if (panMode) {
-    var right = new THREE.Vector3();
-    right.crossVectors(camera.getWorldDirection(new THREE.Vector3()), new THREE.Vector3(0,1,0)).normalize();
-    var spd = radius * 0.0015;
-    target.addScaledVector(right, -(e.clientX - lx) * spd);
-    target.y = Math.max(0, Math.min(3, target.y + (e.clientY - ly) * spd));
-  } else {
-    theta -= (e.clientX - lx) * 0.007;
-    phi = Math.max(0.25, Math.min(Math.PI * 0.55, phi + (e.clientY - ly) * 0.005));
-  }
-  lx = e.clientX; ly = e.clientY; updateCam();
-});
-cv.addEventListener('wheel', function(e) {
-  radius = Math.max(2, Math.min(20, radius + e.deltaY * 0.012));
-  updateCam();
-}, {passive: true});
-
-// Touch
-var tx = 0, ty = 0, pd = 0;
-cv.addEventListener('touchstart', function(e) {
-  autoRot = false; document.getElementById('vc-auto').classList.remove('on');
-  if (e.touches.length === 1) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }
-  else { pd = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY); }
-}, {passive: true});
-cv.addEventListener('touchmove', function(e) {
-  e.preventDefault();
-  if (e.touches.length === 1) {
-    if (panMode) {
-      var right = new THREE.Vector3();
-      right.crossVectors(camera.getWorldDirection(new THREE.Vector3()), new THREE.Vector3(0,1,0)).normalize();
-      var spd = radius * 0.002;
-      target.addScaledVector(right, -(e.touches[0].clientX - tx) * spd);
-      target.y = Math.max(0, Math.min(3, target.y + (e.touches[0].clientY - ty) * spd));
-    } else {
-      theta -= (e.touches[0].clientX - tx) * 0.009;
-      phi = Math.max(0.25, Math.min(Math.PI * 0.55, phi + (e.touches[0].clientY - ty) * 0.007));
-    }
-    tx = e.touches[0].clientX; ty = e.touches[0].clientY; updateCam();
-  } else {
-    var d = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
-    radius = Math.max(2, Math.min(20, radius - (d - pd) * 0.05));
-    pd = d; updateCam();
-  }
-}, {passive: false});
-
-// Keyboard
-window.addEventListener('keydown', function(e) {
-  switch(e.key) {
-    case 'ArrowLeft':  theta -= 0.08; updateCam(); e.preventDefault(); break;
-    case 'ArrowRight': theta += 0.08; updateCam(); e.preventDefault(); break;
-    case 'ArrowUp':    phi = Math.max(0.25, phi - 0.05); updateCam(); e.preventDefault(); break;
-    case 'ArrowDown':  phi = Math.min(Math.PI * 0.55, phi + 0.05); updateCam(); e.preventDefault(); break;
-    case '+': case '=': radius = Math.max(2, radius - 0.5); updateCam(); break;
-    case '-': radius = Math.min(20, radius + 0.5); updateCam(); break;
-  }
-});
-
-function zoomIn() { radius = Math.max(2, radius - 1); updateCam(); }
-function zoomOut() { radius = Math.min(20, radius + 1); updateCam(); }
-function toggleAuto() {
-  autoRot = !autoRot;
-  document.getElementById('vc-auto').classList.toggle('on', autoRot);
-}
-function togglePan() {
-  panMode = !panMode;
-  document.getElementById('vc-pan').classList.toggle('on', panMode);
-  cv.style.cursor = panMode ? 'move' : 'grab';
-}
-function resetCam() {
-  theta = 0.3; phi = 0.9; radius = 9;
-  target.set(0, 0.7, 0);
-  updateCam();
-}
-window.addEventListener('resize', resize);
-
-function boot() {
-  if (typeof THREE === 'undefined' || typeof THREE.GLTFLoader === 'undefined') {
-    setTimeout(boot, 50); return;
-  }
-  setup();
-}
+window.addEventListener('resize',resize);
+function boot(){if(typeof THREE==='undefined'||typeof THREE.GLTFLoader==='undefined'){setTimeout(boot,50);return;}setup();}
 boot();
 </script>
 </body>
