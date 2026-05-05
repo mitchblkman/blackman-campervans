@@ -3,401 +3,445 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blackman Campervans</title>
+<title>Blackman's Vans — Custom Campervans, NSW</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#080D14;--navy-mid:#0D1520;--navy-light:#162030;--blue:#1A4A7A;--gold:#C8A96E;--gold-light:#E4C98A;--white:#F4F1EC;--grey:#8A9BAD}
+:root{
+  --navy:#070C12;--navy-mid:#0C1520;--navy-light:#14202E;
+  --gold:#C8A96E;--gold-light:#E4C98A;--gold-dim:rgba(200,169,110,0.12);
+  --white:#F4F1EC;--grey:#8A9BAD;--grey-dark:#3A4A5C;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--navy);color:var(--white);font-family:'Montserrat',sans-serif;font-weight:300;overflow-x:hidden}
-/* NAV */
-#nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.8rem 4rem;transition:background .5s,padding .4s}
-#nav.scrolled{background:rgba(8,13,20,.97);backdrop-filter:blur(12px);padding:1.2rem 4rem;border-bottom:1px solid rgba(200,169,110,.1)}
-.nav-logo{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.15rem;letter-spacing:.22em;text-transform:uppercase;color:var(--white);text-decoration:none}
+
+/* ── NAV ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.8rem 4rem;transition:all .5s}
+#nav.scrolled{background:rgba(7,12,18,.96);backdrop-filter:blur(16px);padding:1.1rem 4rem;border-bottom:1px solid rgba(200,169,110,.08)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.2rem;letter-spacing:.18em;text-transform:uppercase;color:var(--white);text-decoration:none;white-space:nowrap}
 .nav-logo span{color:var(--gold);font-style:italic}
-.nav-links{display:flex;gap:3rem;list-style:none}
-.nav-links a{font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(244,241,236,.55);text-decoration:none;transition:color .3s}
-.nav-links a:hover{color:var(--gold)}
-.nav-cta{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,169,110,.4);padding:.6rem 1.6rem;text-decoration:none;transition:all .3s}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(244,241,236,.5);text-decoration:none;transition:color .3s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-cta{font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,169,110,.35);padding:.55rem 1.5rem;text-decoration:none;transition:all .3s;white-space:nowrap}
 .nav-cta:hover{background:var(--gold);color:var(--navy)}
-/* HERO */
-#hero{position:relative;height:100vh;min-height:700px;overflow:hidden;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+
+/* ── HERO ── */
+#hero{position:relative;height:100vh;min-height:680px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
 #three-canvas{position:absolute;inset:0;width:100%;height:100%}
-#hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 60%,transparent 40%,rgba(8,13,20,.65) 100%),linear-gradient(to bottom,rgba(8,13,20,.35) 0%,transparent 25%,transparent 65%,rgba(8,13,20,.98) 100%);pointer-events:none;z-index:1}
+#hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 90% 55% at 50% 65%,transparent 35%,rgba(7,12,18,.6) 100%),linear-gradient(to bottom,rgba(7,12,18,.3) 0%,transparent 20%,transparent 65%,rgba(7,12,18,.97) 100%);pointer-events:none;z-index:1}
 .hero-text{position:relative;z-index:2;text-align:center;padding:0 2rem 5rem;opacity:0;animation:fadeUp 1.4s ease .8s forwards}
-.hero-eyebrow{font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
-.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.5rem,7vw,6.5rem);line-height:1;color:var(--white);margin-bottom:.3rem}
-.hero-title em{font-style:italic;color:var(--gold-light)}
-.hero-sub{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(244,241,236,.5);margin-bottom:2.5rem}
+.hero-badge{display:inline-flex;align-items:center;gap:.6rem;font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem}
+.hero-badge::before,.hero-badge::after{content:'';flex:1;height:1px;background:rgba(200,169,110,.3);width:2.5rem}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.8rem,7.5vw,7rem);line-height:.95;color:var(--white);margin-bottom:.5rem;letter-spacing:-.01em}
+.hero-title em{font-style:italic;color:var(--gold-light);display:block}
+.hero-sub{font-size:.68rem;letter-spacing:.32em;text-transform:uppercase;color:rgba(244,241,236,.45);margin-bottom:2.8rem}
 .hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
-.btn-primary{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;background:var(--gold);color:var(--navy);padding:.9rem 2.4rem;text-decoration:none;transition:all .3s;font-family:'Montserrat',sans-serif;font-weight:400;border:none;cursor:pointer}
-.btn-primary:hover{background:var(--gold-light)}
-.btn-ghost{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;background:transparent;color:var(--white);padding:.9rem 2.4rem;text-decoration:none;border:1px solid rgba(244,241,236,.3);transition:all .3s;font-family:'Montserrat',sans-serif;font-weight:300}
-.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-#load-overlay{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;background:var(--navy);transition:opacity .8s}
+.btn{font-family:'Montserrat',sans-serif;font-size:.64rem;letter-spacing:.24em;text-transform:uppercase;padding:.85rem 2.2rem;text-decoration:none;transition:all .3s;border:none;cursor:pointer;display:inline-block}
+.btn-gold{background:var(--gold);color:var(--navy);font-weight:500}
+.btn-gold:hover{background:var(--gold-light)}
+.btn-outline{background:transparent;color:var(--white);border:1px solid rgba(244,241,236,.25)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+#load-overlay{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.8rem;background:var(--navy);transition:opacity .9s}
 #load-overlay.gone{opacity:0;pointer-events:none}
-.load-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:300}
-.load-bar{width:180px;height:1px;background:rgba(200,169,110,.15)}
+.load-wordmark{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold)}
+.load-tagline{font-size:.58rem;letter-spacing:.5em;text-transform:uppercase;color:var(--grey);margin-top:-.8rem}
+.load-bar{width:160px;height:1px;background:rgba(200,169,110,.12)}
 .load-fill{height:100%;background:var(--gold);width:0%;transition:width .3s}
-.load-txt{font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--grey)}
-.scroll-ind{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp 1s ease 2s forwards}
-.scroll-ind span{font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;color:rgba(244,241,236,.35)}
-.scroll-line{width:1px;height:35px;background:linear-gradient(to bottom,rgba(200,169,110,.6),transparent);animation:scrollPulse 2.5s ease-in-out infinite}
-/* DIVIDER */
-.divider{width:100%;height:1px;background:linear-gradient(to right,transparent,rgba(200,169,110,.2),transparent)}
-/* INTRO */
-#intro{padding:10rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:6rem;max-width:1200px;margin:0 auto;align-items:center}
-.intro-label{font-size:.62rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem}
-.intro-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.4rem,3.5vw,3.5rem);line-height:1.15;color:var(--white);margin-bottom:2rem}
-.intro-title em{font-style:italic;color:var(--gold-light)}
-.intro-body{font-size:.88rem;line-height:1.9;color:rgba(244,241,236,.55);margin-bottom:1.2rem}
-.intro-link{font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(200,169,110,.3);padding-bottom:.2rem;transition:border-color .3s;display:inline-block;margin-top:.8rem}
-.intro-link:hover{border-color:var(--gold)}
-.intro-stats{display:grid;grid-template-columns:1fr 1fr;gap:2px}
-.stat-box{background:var(--navy-mid);padding:2.5rem 2rem;border:1px solid rgba(200,169,110,.06);transition:border-color .3s}
-.stat-box:hover{border-color:rgba(200,169,110,.2)}
-.stat-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--gold);line-height:1;margin-bottom:.4rem}
-.stat-unit{font-size:1.1rem}
-.stat-label{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(244,241,236,.4)}
-/* FEATURES */
-#features{padding:8rem 4rem;background:var(--navy-mid)}
-.section-header{text-align:center;max-width:600px;margin:0 auto 5rem}
-.section-label{font-size:.62rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
-.section-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,3vw,3rem);line-height:1.2;color:var(--white)}
-.section-title em{font-style:italic}
-.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,169,110,.06);max-width:1200px;margin:0 auto}
+.scroll-cue{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp 1s ease 2.2s forwards}
+.scroll-cue span{font-size:.55rem;letter-spacing:.45em;text-transform:uppercase;color:rgba(244,241,236,.3)}
+.scroll-line{width:1px;height:32px;background:linear-gradient(to bottom,rgba(200,169,110,.5),transparent);animation:pulse 2.5s ease-in-out infinite}
+
+/* ── SHARED ── */
+.divider{width:100%;height:1px;background:linear-gradient(to right,transparent,rgba(200,169,110,.15),transparent)}
+.sec-label{font-size:.6rem;letter-spacing:.48em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.sec-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.2rem,3.5vw,3.4rem);line-height:1.1;color:var(--white)}
+.sec-title em{font-style:italic;color:var(--gold-light)}
+.inner{max-width:1200px;margin:0 auto;padding:0 4rem}
+
+/* ── ABOUT ── */
+#about{padding:9rem 0}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:7rem;align-items:center}
+.about-body{font-size:.87rem;line-height:1.95;color:rgba(244,241,236,.55);margin-top:1.8rem}
+.about-body p+p{margin-top:1rem}
+.about-link{display:inline-flex;align-items:center;gap:.5rem;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;margin-top:1.8rem;transition:gap .3s}
+.about-link:hover{gap:.8rem}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.stat{background:var(--navy-mid);padding:2.2rem 2rem;border:1px solid rgba(200,169,110,.05);transition:border-color .3s}
+.stat:hover{border-color:rgba(200,169,110,.18)}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;color:var(--gold);line-height:1;margin-bottom:.3rem}
+.stat-u{font-size:.95rem;color:rgba(200,169,110,.55)}
+.stat-l{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,241,236,.38)}
+
+/* ── FEATURES ── */
+#features{padding:8rem 0;background:var(--navy-mid)}
+.feat-header{text-align:center;margin-bottom:5rem}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,169,110,.05)}
 .feat{background:var(--navy-mid);padding:3rem 2.5rem;position:relative;overflow:hidden;transition:background .4s}
-.feat::before{content:'';position:absolute;top:0;left:0;width:0;height:2px;background:var(--gold);transition:width .5s}
+.feat::before{content:'';position:absolute;top:0;left:0;width:0;height:2px;background:var(--gold);transition:width .55s}
 .feat:hover{background:var(--navy-light)}
 .feat:hover::before{width:100%}
-.feat-num{font-family:'Cormorant Garamond',serif;font-size:.75rem;color:rgba(200,169,110,.3);letter-spacing:.2em;margin-bottom:2rem;font-style:italic}
-.feat-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--white);margin-bottom:1rem;line-height:1.3}
-.feat-desc{font-size:.82rem;line-height:1.8;color:rgba(244,241,236,.5)}
-/* SPECS */
-#specs{padding:8rem 4rem;background:var(--navy)}
-.specs-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:6rem;align-items:start}
-.specs-left{position:sticky;top:8rem}
-.specs-intro{font-size:.82rem;line-height:1.9;color:rgba(244,241,236,.5);margin-top:1.5rem}
-.specs-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(200,169,110,.1)}
-.spec-row{padding:2rem 0;border-bottom:1px solid rgba(200,169,110,.08);display:flex;flex-direction:column;gap:.4rem}
-.spec-row:nth-child(odd){padding-right:2rem;border-right:1px solid rgba(200,169,110,.08)}
-.spec-row:nth-child(even){padding-left:2rem}
-.spec-val{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--gold);line-height:1}
-.spec-unit{font-size:.85rem;color:rgba(200,169,110,.6)}
-.spec-key{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(244,241,236,.4)}
-/* EXPLORE CTA */
-#explore-cta{padding:6rem 4rem;background:var(--navy-mid);display:flex;align-items:center;justify-content:space-between;max-width:none;gap:4rem}
-.explore-inner{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;gap:4rem}
-.explore-text h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,3vw,3rem);color:var(--white);margin-bottom:.8rem}
-.explore-text h2 em{font-style:italic;color:var(--gold-light)}
-.explore-text p{font-size:.82rem;color:rgba(244,241,236,.5);line-height:1.7;max-width:500px}
-/* PROCESS */
-#process{padding:8rem 4rem;background:var(--navy)}
-.process-inner{max-width:1000px;margin:0 auto}
-.process-header{text-align:center;margin-bottom:5rem}
-.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
-.process-steps::before{content:'';position:absolute;top:1.75rem;left:12.5%;right:12.5%;height:1px;background:linear-gradient(to right,var(--gold),rgba(200,169,110,.2))}
-.step{text-align:center;padding:0 1.5rem}
-.step-num{width:3.5rem;height:3.5rem;border:1px solid rgba(200,169,110,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1.8rem;font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold);background:var(--navy);position:relative;z-index:1;transition:all .3s}
-.step:hover .step-num{background:var(--gold);color:var(--navy);border-color:var(--gold)}
-.step-title{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--white);margin-bottom:.8rem}
-.step-desc{font-size:.8rem;line-height:1.7;color:rgba(244,241,236,.45)}
-/* CTA */
-#cta{padding:10rem 4rem;background:var(--navy);text-align:center;position:relative;overflow:hidden}
-#cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(200,169,110,.06) 0%,transparent 70%);pointer-events:none}
-.cta-eyebrow{font-size:.62rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;position:relative;z-index:1}
-.cta-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3rem,6vw,5.5rem);line-height:1.05;color:var(--white);margin-bottom:1.5rem;position:relative;z-index:1}
+.feat-n{font-family:'Cormorant Garamond',serif;font-size:.7rem;color:rgba(200,169,110,.28);letter-spacing:.18em;margin-bottom:1.8rem;font-style:italic}
+.feat-t{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:400;color:var(--white);margin-bottom:.9rem;line-height:1.2}
+.feat-d{font-size:.82rem;line-height:1.8;color:rgba(244,241,236,.48)}
+
+/* ── SPECS ── */
+#specs{padding:8rem 0}
+.specs-layout{display:grid;grid-template-columns:1fr 2fr;gap:7rem;align-items:start}
+.specs-sticky{position:sticky;top:8rem}
+.specs-intro{font-size:.84rem;line-height:1.9;color:rgba(244,241,236,.48);margin-top:1.5rem}
+.specs-table{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(200,169,110,.1)}
+.spec{padding:1.8rem 0;border-bottom:1px solid rgba(200,169,110,.07);display:flex;flex-direction:column;gap:.3rem}
+.spec:nth-child(odd){padding-right:2rem;border-right:1px solid rgba(200,169,110,.07)}
+.spec:nth-child(even){padding-left:2rem}
+.spec-v{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:300;color:var(--gold);line-height:1}
+.spec-u{font-size:.8rem;color:rgba(200,169,110,.5)}
+.spec-k{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,241,236,.38)}
+
+/* ── EXPLORE CTA ── */
+#explore-cta{padding:5rem 0;background:var(--navy-mid)}
+.explore-band{display:flex;align-items:center;justify-content:space-between;gap:4rem}
+.explore-band h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.8rem,2.8vw,2.8rem);color:var(--white)}
+.explore-band h2 em{font-style:italic;color:var(--gold-light)}
+.explore-band p{font-size:.82rem;color:rgba(244,241,236,.45);line-height:1.7;max-width:480px;margin-top:.7rem}
+
+/* ── TESTIMONIALS ── */
+#testimonials{padding:8rem 0;background:var(--navy)}
+.test-header{text-align:center;margin-bottom:5rem}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,169,110,.05)}
+.test-card{background:var(--navy);padding:3rem 2.5rem;position:relative}
+.test-card::before{content:'\201C';font-family:'Cormorant Garamond',serif;font-size:5rem;color:rgba(200,169,110,.12);position:absolute;top:1.2rem;left:2rem;line-height:1}
+.test-body{font-size:.88rem;line-height:1.9;color:rgba(244,241,236,.6);font-style:italic;margin-bottom:2rem;position:relative;z-index:1}
+.test-author{display:flex;flex-direction:column;gap:.2rem}
+.test-name{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--white);font-weight:400}
+.test-detail{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);opacity:.7}
+.test-stars{color:var(--gold);font-size:.75rem;margin-bottom:1.5rem;letter-spacing:.1em}
+
+/* ── PROCESS ── */
+#process{padding:8rem 0;background:var(--navy-mid)}
+.proc-header{text-align:center;margin-bottom:5rem}
+.proc-steps{display:grid;grid-template-columns:repeat(4,1fr);position:relative;gap:0}
+.proc-steps::before{content:'';position:absolute;top:1.65rem;left:12%;right:12%;height:1px;background:linear-gradient(to right,var(--gold),rgba(200,169,110,.15))}
+.proc-step{text-align:center;padding:0 1.5rem}
+.proc-dot{width:3.3rem;height:3.3rem;border:1px solid rgba(200,169,110,.28);display:flex;align-items:center;justify-content:center;margin:0 auto 1.8rem;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--gold);background:var(--navy-mid);position:relative;z-index:1;transition:all .3s}
+.proc-step:hover .proc-dot{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.proc-t{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--white);margin-bottom:.7rem}
+.proc-d{font-size:.78rem;line-height:1.75;color:rgba(244,241,236,.42)}
+
+/* ── CTA ── */
+#cta{padding:9rem 0;text-align:center;position:relative;overflow:hidden}
+#cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(200,169,110,.05) 0%,transparent 65%);pointer-events:none}
+.cta-inner{position:relative;z-index:1}
+.cta-eyebrow{font-size:.6rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem}
+.cta-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3rem,6vw,5.5rem);line-height:1;color:var(--white);margin-bottom:1.2rem}
 .cta-title em{font-style:italic;color:var(--gold-light)}
-.cta-sub{font-size:.82rem;color:rgba(244,241,236,.45);margin-bottom:3rem;position:relative;z-index:1}
-.cta-actions{display:flex;justify-content:center;gap:1rem;position:relative;z-index:1;flex-wrap:wrap}
-/* FOOTER */
-footer{padding:2.5rem 4rem;background:var(--navy);border-top:1px solid rgba(200,169,110,.08);display:flex;justify-content:space-between;align-items:center}
-.footer-logo{font-family:'Cormorant Garamond',serif;font-size:.9rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,241,236,.4)}
-.footer-txt{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,241,236,.25)}
-/* ANIMATIONS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes scrollPulse{0%,100%{opacity:.3}50%{opacity:.8}}
-/* RESPONSIVE */
-@media(max-width:900px){
+.cta-sub{font-size:.82rem;color:rgba(244,241,236,.42);margin-bottom:3rem;letter-spacing:.03em}
+.cta-acts{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}
+
+/* ── FOOTER ── */
+footer{padding:2.5rem 4rem;border-top:1px solid rgba(200,169,110,.07);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.foot-logo{font-family:'Cormorant Garamond',serif;font-size:.9rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(244,241,236,.35)}
+.foot-links{display:flex;gap:2rem}
+.foot-links a{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,241,236,.25);text-decoration:none;transition:color .3s}
+.foot-links a:hover{color:var(--gold)}
+.foot-txt{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,236,.2)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.85}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
   #nav{padding:1.2rem 1.5rem}#nav.scrolled{padding:.9rem 1.5rem}
   .nav-links,.nav-cta{display:none}
-  #intro{grid-template-columns:1fr;gap:3rem;padding:5rem 1.5rem}
-  #features{padding:5rem 1.5rem}.feat-grid{grid-template-columns:1fr}
-  #specs{padding:5rem 1.5rem}.specs-inner{grid-template-columns:1fr;gap:3rem}.specs-left{position:static}
-  #explore-cta{padding:4rem 1.5rem}.explore-inner{flex-direction:column;text-align:center}
-  #process{padding:5rem 1.5rem}.process-steps{grid-template-columns:repeat(2,1fr);gap:2rem}.process-steps::before{display:none}
-  #cta{padding:6rem 1.5rem}
-  footer{flex-direction:column;gap:.8rem;padding:2rem 1.5rem;text-align:center}
+  .inner{padding:0 1.5rem}
+  #about{padding:5rem 0}.about-grid{grid-template-columns:1fr;gap:3rem}
+  #features{padding:5rem 0}.feat-grid{grid-template-columns:1fr}
+  #specs{padding:5rem 0}.specs-layout{grid-template-columns:1fr;gap:3rem}.specs-sticky{position:static}
+  #explore-cta{padding:4rem 0}.explore-band{flex-direction:column;text-align:center}
+  #testimonials{padding:5rem 0}.test-grid{grid-template-columns:1fr}
+  #process{padding:5rem 0}.proc-steps{grid-template-columns:repeat(2,1fr);gap:2.5rem}.proc-steps::before{display:none}
+  #cta{padding:6rem 0}
+  footer{padding:2rem 1.5rem;flex-direction:column;text-align:center}.foot-links{justify-content:center}
 }
 </style>
 </head>
 <body>
 
 <nav id="nav">
-  <a href="index.html" class="nav-logo">Blackman <span>Campervans</span></a>
+  <a href="index.html" class="nav-logo">Blackman's <span>Vans</span></a>
   <ul class="nav-links">
-    <li><a href="#intro">About</a></li>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#specs">Specifications</a></li>
-    <li><a href="#process">Process</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="forsale.html">For Sale</a></li>
     <li><a href="explore.html">Explore the Build</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#process">Process</a></li>
   </ul>
-  <a href="mailto:hello@blackmancampervans.com.au" class="nav-cta">Enquire</a>
+  <a href="mailto:hello@blackmansvans.com.au" class="nav-cta">Enquire</a>
 </nav>
 
 <section id="hero">
   <canvas id="three-canvas"></canvas>
   <div id="load-overlay">
-    <div class="load-logo">Blackman</div>
+    <div class="load-wordmark">Blackman's Vans</div>
+    <div class="load-tagline">Custom Campervans · NSW</div>
     <div class="load-bar"><div class="load-fill" id="load-fill"></div></div>
-    <div class="load-txt" id="load-txt">Preparing your experience</div>
   </div>
   <div class="hero-text">
-    <p class="hero-eyebrow">Handbuilt in New South Wales, Australia</p>
-    <h1 class="hero-title">Built for<br><em>the Wild</em></h1>
+    <div class="hero-badge">Handbuilt in NSW, Australia</div>
+    <h1 class="hero-title">Built for<em>the Wild</em></h1>
     <p class="hero-sub">Custom Campervans &middot; Every Detail Considered</p>
     <div class="hero-actions">
-      <a href="explore.html" class="btn-primary">Explore the Build</a>
-      <a href="mailto:hello@blackmancampervans.com.au" class="btn-ghost">Request a Quote</a>
+      <a href="explore.html" class="btn btn-gold">Explore the Build</a>
+      <a href="forsale.html" class="btn btn-outline">Vans For Sale</a>
     </div>
   </div>
-  <div class="scroll-ind"><div class="scroll-line"></div><span>Scroll</span></div>
+  <div class="scroll-cue"><div class="scroll-line"></div><span>Scroll</span></div>
 </section>
 
 <div class="divider"></div>
-<section id="intro">
-  <div>
-    <p class="intro-label">The Blackman Philosophy</p>
-    <h2 class="intro-title">Where craft meets<br><em>the open road</em></h2>
-    <p class="intro-body">Every Blackman campervan begins with a conversation and ends with a vehicle that is entirely yours. Built by hand in our NSW workshop, each build reflects the landscape it was made for — rugged enough for the outback, refined enough for wherever life takes you.</p>
-    <p class="intro-body">We build around ten vans a year, and we intend to keep it that way. The limitation is the point.</p>
-    <a href="explore.html" class="intro-link">Explore the build in 3D &rarr;</a>
-  </div>
-  <div class="intro-stats">
-    <div class="stat-box"><div class="stat-num">200<span class="stat-unit">Ah</span></div><p class="stat-label">LiFePO&#8322; Battery</p></div>
-    <div class="stat-box"><div class="stat-num">400<span class="stat-unit">W</span></div><p class="stat-label">Solar Input</p></div>
-    <div class="stat-box"><div class="stat-num">12<span class="stat-unit">wk</span></div><p class="stat-label">Build Time</p></div>
-    <div class="stat-box"><div class="stat-num">10<span class="stat-unit">/yr</span></div><p class="stat-label">Builds Per Year</p></div>
+
+<section id="about">
+  <div class="inner">
+    <div class="about-grid">
+      <div>
+        <p class="sec-label">The Blackman's Philosophy</p>
+        <h2 class="sec-title">Where craft meets<br><em>the open road</em></h2>
+        <div class="about-body">
+          <p>Every Blackman's van begins with a conversation and ends with a vehicle that is entirely yours. Built by hand in our NSW workshop, each build reflects the landscape it was made for — rugged enough for the outback, refined enough for wherever life takes you.</p>
+          <p>We build around ten vans a year, and we intend to keep it that way. The limitation is the point. When you work with us, you get our full attention — not a production line.</p>
+        </div>
+        <a href="explore.html" class="about-link">Explore the full build in 3D &rarr;</a>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-n">200<span class="stat-u">Ah</span></div><p class="stat-l">LiFePO&#8322; Battery</p></div>
+        <div class="stat"><div class="stat-n">400<span class="stat-u">W</span></div><p class="stat-l">Solar Input</p></div>
+        <div class="stat"><div class="stat-n">12<span class="stat-u">wk</span></div><p class="stat-l">Build Time</p></div>
+        <div class="stat"><div class="stat-n">10<span class="stat-u">/yr</span></div><p class="stat-l">Builds Per Year</p></div>
+      </div>
+    </div>
   </div>
 </section>
+
 <div class="divider"></div>
 
 <section id="features">
-  <div class="section-header">
-    <p class="section-label">Craftsmanship</p>
-    <h2 class="section-title">Every detail<br><em>considered</em></h2>
-  </div>
-  <div class="feat-grid">
-    <div class="feat"><p class="feat-num">01</p><h3 class="feat-title">Off-Grid Electrical</h3><p class="feat-desc">LiFePO&#8322; lithium batteries, dual solar input, MPPT controller, and a full 240V inverter. Weeks of power without a plug.</p></div>
-    <div class="feat"><p class="feat-num">02</p><h3 class="feat-title">Full Kitchen</h3><p class="feat-desc">Induction cooktop, 12V compressor fridge, oak benchtop, and storage designed around how people actually cook on the road.</p></div>
-    <div class="feat"><p class="feat-num">03</p><h3 class="feat-title">Hot Shower</h3><p class="feat-desc">On-demand hot water, discreet wet bath or outdoor shower connection. Comfort that follows you everywhere.</p></div>
-    <div class="feat"><p class="feat-num">04</p><h3 class="feat-title">Custom Cabinetry</h3><p class="feat-desc">Handbuilt linen-finish cabinetry with birch ply edges. Every drawer, door, and shelf designed for your specific needs.</p></div>
-    <div class="feat"><p class="feat-num">05</p><h3 class="feat-title">Climate Control</h3><p class="feat-desc">Spray foam and rigid board insulation throughout. Designed for Australian conditions — cold highlands, coastal humidity, desert heat.</p></div>
-    <div class="feat"><p class="feat-num">06</p><h3 class="feat-title">Compliance Ready</h3><p class="feat-desc">Full NSW registration, engineer certification, and dealer-licensed build process. You drive it the day it is handed over.</p></div>
+  <div class="inner">
+    <div class="feat-header">
+      <p class="sec-label">Craftsmanship</p>
+      <h2 class="sec-title">Every detail<br><em>considered</em></h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat"><p class="feat-n">01</p><h3 class="feat-t">Off-Grid Electrical</h3><p class="feat-d">LiFePO&#8322; lithium batteries, dual solar input, MPPT controller, and a full 240V inverter. Weeks of power without a plug.</p></div>
+      <div class="feat"><p class="feat-n">02</p><h3 class="feat-t">Full Kitchen</h3><p class="feat-d">Induction cooktop, 12V compressor fridge, oak benchtop, and storage designed around how people actually cook on the road.</p></div>
+      <div class="feat"><p class="feat-n">03</p><h3 class="feat-t">Hot Shower</h3><p class="feat-d">On-demand hot water, discreet wet bath or outdoor shower connection. Comfort wherever you are.</p></div>
+      <div class="feat"><p class="feat-n">04</p><h3 class="feat-t">Custom Cabinetry</h3><p class="feat-d">Handbuilt linen-finish cabinetry with birch ply edges. Every drawer, door, and shelf made for your needs.</p></div>
+      <div class="feat"><p class="feat-n">05</p><h3 class="feat-t">Climate Control</h3><p class="feat-d">Spray foam and rigid board insulation throughout. Built for Australian conditions — highlands, coast, and outback.</p></div>
+      <div class="feat"><p class="feat-n">06</p><h3 class="feat-t">Compliance Ready</h3><p class="feat-d">Full NSW registration, engineer certification, dealer-licensed build. You drive it the day it's handed over.</p></div>
+    </div>
   </div>
 </section>
+
 <div class="divider"></div>
 
 <section id="specs">
-  <div class="specs-inner">
-    <div class="specs-left">
-      <p class="section-label">Specifications</p>
-      <h2 class="section-title">Built to<br><em>perform</em></h2>
-      <p class="specs-intro">Every specification reflects a deliberate choice. Nothing is standard. Everything is selected for the Australian environment and the demands of extended off-grid travel.</p>
-    </div>
-    <div class="specs-grid">
-      <div class="spec-row"><div class="spec-val">200<span class="spec-unit">Ah</span></div><p class="spec-key">LiFePO&#8322; Battery</p></div>
-      <div class="spec-row"><div class="spec-val">400<span class="spec-unit">W</span></div><p class="spec-key">Solar Panels</p></div>
-      <div class="spec-row"><div class="spec-val">3<span class="spec-unit">kW</span></div><p class="spec-key">Inverter Output</p></div>
-      <div class="spec-row"><div class="spec-val">60<span class="spec-unit">L</span></div><p class="spec-key">Fresh Water</p></div>
-      <div class="spec-row"><div class="spec-val">12<span class="spec-unit">wk</span></div><p class="spec-key">Build Time</p></div>
-      <div class="spec-row"><div class="spec-val">100<span class="spec-unit">%</span></div><p class="spec-key">Custom to You</p></div>
+  <div class="inner">
+    <div class="specs-layout">
+      <div class="specs-sticky">
+        <p class="sec-label">Specifications</p>
+        <h2 class="sec-title">Built to<br><em>perform</em></h2>
+        <p class="specs-intro">Every specification is a deliberate choice. Nothing is standard. Everything is selected for the Australian environment and the demands of extended off-grid travel.</p>
+      </div>
+      <div class="specs-table">
+        <div class="spec"><div class="spec-v">200<span class="spec-u">Ah</span></div><p class="spec-k">LiFePO&#8322; Battery</p></div>
+        <div class="spec"><div class="spec-v">400<span class="spec-u">W</span></div><p class="spec-k">Solar Panels</p></div>
+        <div class="spec"><div class="spec-v">3<span class="spec-u">kW</span></div><p class="spec-k">Inverter Output</p></div>
+        <div class="spec"><div class="spec-v">60<span class="spec-u">L</span></div><p class="spec-k">Fresh Water</p></div>
+        <div class="spec"><div class="spec-v">12<span class="spec-u">wk</span></div><p class="spec-k">Build Time</p></div>
+        <div class="spec"><div class="spec-v">100<span class="spec-u">%</span></div><p class="spec-k">Custom to You</p></div>
+      </div>
     </div>
   </div>
 </section>
+
 <div class="divider"></div>
 
-<section id="explore-cta">
-  <div class="explore-inner">
-    <div class="explore-text">
-      <h2>See every angle,<br><em>inside and out</em></h2>
-      <p>Our interactive 3D viewer lets you explore the full build in detail. Rotate, zoom, and pan your way through the exterior and interior — on any device.</p>
+<section id="explore-cta" style="background:var(--navy-mid)">
+  <div class="inner">
+    <div class="explore-band">
+      <div>
+        <h2>See every angle,<br><em>inside and out</em></h2>
+        <p>Our interactive 3D viewer lets you rotate, zoom, and pan through the full build on any device.</p>
+      </div>
+      <a href="explore.html" class="btn btn-gold" style="flex-shrink:0">Open 3D Explorer &rarr;</a>
     </div>
-    <a href="explore.html" class="btn-primary" style="white-space:nowrap;flex-shrink:0">Open 3D Explorer &rarr;</a>
   </div>
 </section>
+
+<div class="divider"></div>
+
+<section id="testimonials">
+  <div class="inner">
+    <div class="test-header">
+      <p class="sec-label">Client Reviews</p>
+      <h2 class="sec-title">What our owners<br><em>have to say</em></h2>
+    </div>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="test-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="test-body">"The attention to detail is extraordinary. From the first consultation to handover day, Mitch was across every single aspect of the build. The van is exactly what we imagined — and then some."</p>
+        <div class="test-author">
+          <span class="test-name">James &amp; Sarah T.</span>
+          <span class="test-detail">Transit Custom · 2024</span>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="test-body">"We've done 14,000km since handover — through the Kimberley, across the Nullarbor, up to Cape York. Not a single issue. The electrical system is bulletproof and the fitout is still immaculate."</p>
+        <div class="test-author">
+          <span class="test-name">Dave M.</span>
+          <span class="test-detail">Ford Transit High Roof · 2023</span>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="test-body">"Worth every cent. The quality of the cabinetry and fitout puts most production vans to shame. We got exactly what we asked for — a van that looks and feels like a proper home on wheels."</p>
+        <div class="test-author">
+          <span class="test-name">Liz &amp; Paul R.</span>
+          <span class="test-detail">Transit · Full-time Living · 2024</span>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:3rem">
+      <a href="forsale.html" class="about-link" style="display:inline-flex">View vans currently for sale &rarr;</a>
+    </div>
+  </div>
+</section>
+
 <div class="divider"></div>
 
 <section id="process">
-  <div class="process-inner">
-    <div class="process-header">
-      <p class="section-label">How It Works</p>
-      <h2 class="section-title">Your build,<br><em>your way</em></h2>
+  <div class="inner">
+    <div class="proc-header">
+      <p class="sec-label">How It Works</p>
+      <h2 class="sec-title">Your build,<br><em>your way</em></h2>
     </div>
-    <div class="process-steps">
-      <div class="step"><div class="step-num">1</div><p class="step-title">Consultation</p><p class="step-desc">We talk through your travel style, must-haves, and budget in detail</p></div>
-      <div class="step"><div class="step-num">2</div><p class="step-title">Design</p><p class="step-desc">A custom layout is drawn up and every material and specification confirmed</p></div>
-      <div class="step"><div class="step-num">3</div><p class="step-title">Build</p><p class="step-desc">Twelve weeks of handcrafted construction in our New South Wales workshop</p></div>
-      <div class="step"><div class="step-num">4</div><p class="step-title">Handover</p><p class="step-desc">Full walkthrough, compliance complete. You drive away the same day</p></div>
+    <div class="proc-steps">
+      <div class="proc-step"><div class="proc-dot">1</div><p class="proc-t">Consultation</p><p class="proc-d">We talk through your travel style, must-haves, and budget in detail</p></div>
+      <div class="proc-step"><div class="proc-dot">2</div><p class="proc-t">Design</p><p class="proc-d">A custom layout is drawn up and every material confirmed</p></div>
+      <div class="proc-step"><div class="proc-dot">3</div><p class="proc-t">Build</p><p class="proc-d">Twelve weeks of handcrafted construction in our NSW workshop</p></div>
+      <div class="proc-step"><div class="proc-dot">4</div><p class="proc-t">Handover</p><p class="proc-d">Full walkthrough, compliance done. You drive away the same day</p></div>
     </div>
   </div>
 </section>
+
 <div class="divider"></div>
 
 <section id="cta">
-  <p class="cta-eyebrow">Limited availability &middot; NSW, Australia</p>
-  <h2 class="cta-title">Ready to begin<br><em>your build?</em></h2>
-  <p class="cta-sub">We take on a small number of builds each year. Reach out to start the conversation.</p>
-  <div class="cta-actions">
-    <a href="mailto:hello@blackmancampervans.com.au" class="btn-primary">Get in Touch</a>
-    <a href="explore.html" class="btn-ghost">Explore the Van</a>
+  <div class="inner">
+    <div class="cta-inner">
+      <p class="cta-eyebrow">Limited availability &middot; NSW, Australia</p>
+      <h2 class="cta-title">Ready to begin<br><em>your build?</em></h2>
+      <p class="cta-sub">We take on a small number of builds each year. Reach out to start the conversation.</p>
+      <div class="cta-acts">
+        <a href="mailto:hello@blackmansvans.com.au" class="btn btn-gold">Get in Touch</a>
+        <a href="forsale.html" class="btn btn-outline">Browse Vans For Sale</a>
+      </div>
+    </div>
   </div>
 </section>
 
 <footer>
-  <div class="footer-logo">Blackman Campervans</div>
-  <p class="footer-txt">NSW Australia &middot; Handbuilt</p>
+  <div class="foot-logo">Blackman's Vans</div>
+  <div class="foot-links">
+    <a href="forsale.html">For Sale</a>
+    <a href="explore.html">3D Explorer</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="mailto:hello@blackmansvans.com.au">Contact</a>
+  </div>
+  <p class="foot-txt">NSW Australia &middot; Handbuilt</p>
 </footer>
 
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
-window.addEventListener('scroll',function(){
-  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50);
-});
+window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50);});
 
 var renderer,scene,camera,target;
-var theta=0.3,scrollTheta=0,phi=0.88,radius=10;
+var theta=0.3,phi=0.88,radius=10;
 var vanLoaded=false;
 
 function setup(){
   var cv=document.getElementById('three-canvas');
-  renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:false});
+  renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-  renderer.setClearColor(0x080D14,1);
+  renderer.setClearColor(0x070C12,1);
   renderer.shadowMap.enabled=true;
   renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   renderer.outputEncoding=THREE.sRGBEncoding;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure=1.5;
-
   var w=cv.clientWidth,h=cv.clientHeight;
   renderer.setSize(w,h,false);
   scene=new THREE.Scene();
   camera=new THREE.PerspectiveCamera(40,w/h,0.01,300);
   target=new THREE.Vector3(0,0.7,0);
 
-  // Lighting
   scene.add(new THREE.AmbientLight(0xCCDDFF,0.25));
   var key=new THREE.DirectionalLight(0xFFEEDD,3.0);
   key.position.set(7,9,5);key.castShadow=true;
-  key.shadow.mapSize.set(2048,2048);
-  key.shadow.camera.near=0.5;key.shadow.camera.far=35;
-  key.shadow.camera.left=-7;key.shadow.camera.right=7;
-  key.shadow.camera.top=7;key.shadow.camera.bottom=-7;
+  key.shadow.mapSize.set(2048,2048);key.shadow.camera.near=0.5;key.shadow.camera.far=35;
+  key.shadow.camera.left=-7;key.shadow.camera.right=7;key.shadow.camera.top=7;key.shadow.camera.bottom=-7;
   key.shadow.bias=-0.001;scene.add(key);
   var fill=new THREE.DirectionalLight(0x7799CC,0.9);fill.position.set(-8,5,2);scene.add(fill);
   var rim=new THREE.DirectionalLight(0x99BBDD,1.4);rim.position.set(-1,7,-10);scene.add(rim);
-  scene.add(new THREE.HemisphereLight(0x223355,0x080D14,0.5));
+  scene.add(new THREE.HemisphereLight(0x223355,0x070C12,0.5));
 
-  // ── ROAD ─────────────────────────────────────────────────────────
-  // Road surface
-  var roadMat=new THREE.MeshStandardMaterial({color:0x1A1A1A,roughness:0.9,metalness:0.05});
-  var road=new THREE.Mesh(new THREE.PlaneGeometry(7,200),roadMat);
-  road.rotation.x=-Math.PI/2;road.receiveShadow=true;road.position.set(-1.5,-0.002,0);
-  scene.add(road);
+  // Road
+  var roadMat=new THREE.MeshStandardMaterial({color:0x1A1A1A,roughness:0.88,metalness:0.05});
+  var road=new THREE.Mesh(new THREE.PlaneGeometry(7,300),roadMat);
+  road.rotation.x=-Math.PI/2;road.receiveShadow=true;road.position.set(-1.5,-0.002,0);scene.add(road);
+  var ground=new THREE.Mesh(new THREE.PlaneGeometry(300,300),new THREE.MeshStandardMaterial({color:0x0E0E0A,roughness:0.98}));
+  ground.rotation.x=-Math.PI/2;ground.position.y=-0.003;scene.add(ground);
+  var wm=new THREE.MeshBasicMaterial({color:0xEEEEEE});
+  var lL=new THREE.Mesh(new THREE.PlaneGeometry(0.1,300),wm);lL.rotation.x=-Math.PI/2;lL.position.set(-4.9,0.001,0);scene.add(lL);
+  var lR=new THREE.Mesh(new THREE.PlaneGeometry(0.1,300),wm);lR.rotation.x=-Math.PI/2;lR.position.set(1.9,0.001,0);scene.add(lR);
+  var dm=new THREE.MeshBasicMaterial({color:0xDDDDDD});
+  for(var di=-30;di<30;di++){var d=new THREE.Mesh(new THREE.PlaneGeometry(0.08,1.1),dm);d.rotation.x=-Math.PI/2;d.position.set(-1.5,0.001,di*3.5);scene.add(d);}
 
-  // Surrounding ground (darker dirt/verge)
-  var groundMat=new THREE.MeshStandardMaterial({color:0x111108,roughness:0.98});
-  var ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),groundMat);
-  ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;ground.position.y=-0.003;
-  scene.add(ground);
+  // Glow rings
+  for(var i=0;i<3;i++){var r=new THREE.Mesh(new THREE.RingGeometry(1.7+i*1.7,1.78+i*1.7,64),new THREE.MeshBasicMaterial({color:0x1A4A7A,side:THREE.DoubleSide,transparent:true,opacity:0.14-i*0.04}));r.rotation.x=-Math.PI/2;r.position.set(-1.5,0.001,0);scene.add(r);}
 
-  // White edge lines - left edge
-  var lineMat=new THREE.MeshBasicMaterial({color:0xFFFFFF});
-  var leftLine=new THREE.Mesh(new THREE.PlaneGeometry(0.12,200),lineMat);
-  leftLine.rotation.x=-Math.PI/2;leftLine.position.set(-4.9,0.001,0);
-  scene.add(leftLine);
-  // Right edge
-  var rightLine=new THREE.Mesh(new THREE.PlaneGeometry(0.12,200),lineMat);
-  rightLine.rotation.x=-Math.PI/2;rightLine.position.set(1.9,0.001,0);
-  scene.add(rightLine);
+  // Sky
+  var sg=new THREE.SphereGeometry(220,32,16);
+  var sm=new THREE.ShaderMaterial({uniforms:{top:{value:new THREE.Color(0x020408)},mid:{value:new THREE.Color(0x060D18)},hor:{value:new THREE.Color(0x0D1E30)}},vertexShader:'varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',fragmentShader:'uniform vec3 top,mid,hor;varying vec3 vP;void main(){float h=normalize(vP).y;vec3 c=h>0.15?mix(mid,top,smoothstep(0.15,0.7,h)):mix(hor,mid,smoothstep(-0.1,0.15,h));gl_FragColor=vec4(c,1.0);}',side:THREE.BackSide,depthWrite:false});
+  scene.add(new THREE.Mesh(sg,sm));
+  scene.fog=new THREE.FogExp2(0x070C12,0.016);
 
-  // Centre dashed line
-  var dashMat=new THREE.MeshBasicMaterial({color:0xFFFFFF});
-  for(var di=-20;di<20;di++){
-    var dash=new THREE.Mesh(new THREE.PlaneGeometry(0.1,1.2),dashMat);
-    dash.rotation.x=-Math.PI/2;
-    dash.position.set(-1.5,0.001,di*3.5);
-    scene.add(dash);
-  }
-
-  // Glow rings under van
-  for(var i=0;i<3;i++){
-    var ring=new THREE.Mesh(
-      new THREE.RingGeometry(1.6+i*1.5,1.68+i*1.5,64),
-      new THREE.MeshBasicMaterial({color:0x1A4A7A,side:THREE.DoubleSide,transparent:true,opacity:0.15-i*0.04})
-    );
-    ring.rotation.x=-Math.PI/2;ring.position.set(-1.5,0.001,0);
-    scene.add(ring);
-  }
-
-  // Dark sky
-  var skyGeo=new THREE.SphereGeometry(180,32,16);
-  var skyMat=new THREE.ShaderMaterial({
-    uniforms:{top:{value:new THREE.Color(0x020408)},mid:{value:new THREE.Color(0x060D18)},hor:{value:new THREE.Color(0x0D1E30)}},
-    vertexShader:'varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
-    fragmentShader:'uniform vec3 top,mid,hor;varying vec3 vP;void main(){float h=normalize(vP).y;vec3 c=h>0.15?mix(mid,top,smoothstep(0.15,0.7,h)):mix(hor,mid,smoothstep(-0.1,0.15,h));gl_FragColor=vec4(c,1.0);}',
-    side:THREE.BackSide,depthWrite:false
-  });
-  scene.add(new THREE.Mesh(skyGeo,skyMat));
-  scene.fog=new THREE.FogExp2(0x080D14,0.018);
-
-  updateCam();
-  animate();
-  loadGLB();
+  updateCam();animate();loadGLB();
 }
 
 function updateCam(){
-  var t=theta+scrollTheta;
-  camera.position.set(
-    target.x+radius*Math.sin(phi)*Math.sin(t),
-    target.y+radius*Math.cos(phi),
-    target.z+radius*Math.sin(phi)*Math.cos(t)
-  );
+  var t=theta;
+  camera.position.set(target.x+radius*Math.sin(phi)*Math.sin(t),target.y+radius*Math.cos(phi),target.z+radius*Math.sin(phi)*Math.cos(t));
   camera.lookAt(target);
 }
 
 // Scroll-driven rotation
 window.addEventListener('scroll',function(){
-  var hero=document.getElementById('hero');
-  var heroH=hero.offsetHeight;
-  var scrollY=window.scrollY;
-  // Rotate 1.5 full turns as user scrolls through the hero height
-  scrollTheta=(scrollY/heroH)*Math.PI*3;
-  // Also slightly lower camera angle as scroll progresses
-  phi=Math.max(0.6,0.88-(scrollY/heroH)*0.25);
-  updateCam();
+  var heroH=document.getElementById('hero').offsetHeight;
+  var sy=window.scrollY;
+  theta=0.3+(sy/heroH)*Math.PI*3;
+  phi=Math.max(0.65,0.88-(sy/heroH)*0.2);
+  if(vanLoaded)updateCam();
 });
 
-function animate(){
-  requestAnimationFrame(animate);
-  // Slow auto drift when not scrolling
-  if(vanLoaded && window.scrollY<50){theta+=0.003;updateCam();}
-  renderer.render(scene,camera);
-}
-
-function resize(){
-  var cv=document.getElementById('three-canvas');
-  var w=cv.clientWidth,h=cv.clientHeight;
-  renderer.setSize(w,h,false);
-  camera.aspect=w/h;camera.updateProjectionMatrix();
-}
+function animate(){requestAnimationFrame(animate);if(vanLoaded&&window.scrollY<50){theta+=0.003;updateCam();}renderer.render(scene,camera);}
+function resize(){var cv=document.getElementById('three-canvas');var w=cv.clientWidth,h=cv.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
 
 function parseMatColor(n){
-  if(!n)return null;
-  var nl=n.toLowerCase();
+  if(!n)return null;var nl=n.toLowerCase();
   if(nl.indexOf('white')>-1)return{hex:0xF4F4F4,rough:0.2,metal:0.0};
   if(nl.indexOf('black')>-1||nl.indexOf('oxide')>-1)return{hex:0x111111,rough:0.4,metal:0.0};
   if(nl.indexOf('oak')>-1)return{hex:0xC4945A,rough:0.65,metal:0.0};
@@ -415,7 +459,6 @@ function parseMatColor(n){
 
 function loadGLB(){
   var fill=document.getElementById('load-fill');
-  var txt=document.getElementById('load-txt');
   var ov=document.getElementById('load-overlay');
   fill.style.width='8%';
   new THREE.GLTFLoader().load('van_exterior.glb',function(gltf){
@@ -423,37 +466,24 @@ function loadGLB(){
     var box=new THREE.Box3().setFromObject(mdl);
     var size=box.getSize(new THREE.Vector3());
     var centre=box.getCenter(new THREE.Vector3());
-    var maxDim=Math.max(size.x,size.y,size.z);
-    var scl=5.0/maxDim;
+    var scl=5.0/Math.max(size.x,size.y,size.z);
     mdl.scale.set(scl,scl,scl);
     mdl.position.set(-centre.x*scl,0,-centre.z*scl);
-    var wrapper=new THREE.Group();
-    wrapper.add(mdl);
-    mdl.rotation.x=-Math.PI/2;
-    scene.add(wrapper);
-    var wb=new THREE.Box3().setFromObject(wrapper);
-    wrapper.position.y=-wb.min.y;
-    // Place van on left lane - offset to left of road centre
-    wrapper.position.x=-1.5;
-    scene.remove(wrapper);
-    var matCache={};
+    var w=new THREE.Group();w.add(mdl);mdl.rotation.x=-Math.PI/2;
+    scene.add(w);var wb=new THREE.Box3().setFromObject(w);w.position.y=-wb.min.y;
+    w.position.x=-1.5;scene.remove(w);
+    var mc={};
     mdl.traverse(function(c){
-      if(!c.isMesh)return;
-      c.castShadow=true;c.receiveShadow=true;
+      if(!c.isMesh)return;c.castShadow=true;c.receiveShadow=true;
       var n=c.material?(c.material.name||''):'';
-      if(!matCache[n]){var p=parseMatColor(n);if(p){var m=c.material.clone();m.color.setHex(p.hex);m.roughness=p.rough;m.metalness=p.metal;m.needsUpdate=true;matCache[n]=m;}else matCache[n]=c.material;}
-      c.material=matCache[n];
+      if(!mc[n]){var p=parseMatColor(n);if(p){var m=c.material.clone();m.color.setHex(p.hex);m.roughness=p.rough;m.metalness=p.metal;m.needsUpdate=true;mc[n]=m;}else mc[n]=c.material;}
+      c.material=mc[n];
     });
-    scene.add(wrapper);
-    vanLoaded=true;
-    fill.style.width='100%';
-    resize();renderer.render(scene,camera);
-    setTimeout(function(){ov.classList.add('gone');resize();},500);
-  },function(xhr){
-    if(xhr.total){var pct=xhr.loaded/xhr.total*85;fill.style.width=(8+pct)+'%';if(pct>50)txt.textContent='Almost ready';}
-  },function(err){txt.textContent='Error loading model';console.error(err);});
+    scene.add(w);vanLoaded=true;fill.style.width='100%';resize();renderer.render(scene,camera);
+    setTimeout(function(){ov.classList.add('gone');resize();},600);
+  },function(xhr){if(xhr.total)fill.style.width=(8+xhr.loaded/xhr.total*85)+'%';},
+  function(err){document.getElementById('load-overlay').querySelector('.load-tagline').textContent='Error loading model';console.error(err);});
 }
-
 window.addEventListener('resize',resize);
 function boot(){if(typeof THREE==='undefined'||typeof THREE.GLTFLoader==='undefined'){setTimeout(boot,50);return;}setup();}
 boot();
