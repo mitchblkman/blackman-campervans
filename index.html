@@ -195,7 +195,7 @@ footer{padding:2rem 4rem;background:var(--earth);border-top:1px solid rgba(200,1
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
-var theta = 0.3, phi = 1.1, radius = 9;
+var theta = 0.3, phi = 1.05, radius = 9;
 var autoRot = true;
 var drag = false, lx = 0, ly = 0;
 var renderer, scene, camera, target;
@@ -208,7 +208,7 @@ function setup() {
 
   renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setClearColor(0x0D1117, 1);
+  renderer.setClearColor(0xF0A855, 1);
   renderer.shadowMap.enabled = true;
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -219,66 +219,127 @@ function setup() {
   scene.fog = new THREE.Fog(0x1A140C, 18, 45);
 
   camera = new THREE.PerspectiveCamera(42, w / h, 0.01, 200);
-  target = new THREE.Vector3(0, 0.8, 0);
+  target = new THREE.Vector3(0, 0.9, 0);
 
-  scene.add(new THREE.AmbientLight(0xfff8e8, 0.7));
-  var sun = new THREE.DirectionalLight(0xffe8c0, 2.2);
-  sun.position.set(6, 10, 5);
+  // Golden hour lighting - warm sun low on horizon
+  scene.add(new THREE.AmbientLight(0xFFE8C0, 0.5));
+
+  var sun = new THREE.DirectionalLight(0xFFCC77, 2.8);
+  sun.position.set(8, 6, 4);
   sun.castShadow = true;
-  sun.shadow.mapSize.set(1024, 1024);
+  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.camera.near = 0.5;
+  sun.shadow.camera.far = 50;
+  sun.shadow.camera.left = -8;
+  sun.shadow.camera.right = 8;
+  sun.shadow.camera.top = 8;
+  sun.shadow.camera.bottom = -8;
   scene.add(sun);
-  var fl = new THREE.DirectionalLight(0x8bb4c8, 0.55);
-  fl.position.set(-5, 3, -3);
-  scene.add(fl);
-  var rl = new THREE.DirectionalLight(0xffa060, 0.4);
-  rl.position.set(0, 2, -9);
-  scene.add(rl);
-  scene.add(new THREE.HemisphereLight(0x8bb4c8, 0x2C2415, 0.35));
 
-  // Ground plane - subtle concrete/asphalt look
-  var gnd = new THREE.Mesh(
-    new THREE.CircleGeometry(12, 64),
-    new THREE.MeshStandardMaterial({color: 0x1C1C1C, roughness: 0.95, metalness: 0.0})
-  );
-  gnd.rotation.x = -Math.PI / 2;
-  gnd.receiveShadow = true;
-  gnd.position.y = -0.002;
-  scene.add(gnd);
+  // Cool fill from opposite side (sky reflection)
+  var fill = new THREE.DirectionalLight(0x88BBDD, 0.6);
+  fill.position.set(-6, 4, -3);
+  scene.add(fill);
 
-  // Background gradient sky using a large sphere
-  var skyGeo = new THREE.SphereGeometry(80, 32, 16);
+  // Warm bounce from ground
+  var bounce = new THREE.DirectionalLight(0xFFAA55, 0.3);
+  bounce.position.set(0, -2, 3);
+  scene.add(bounce);
+
+  scene.add(new THREE.HemisphereLight(0x7BAFD4, 0x8B6914, 0.5));
+
+  // ── GROUND ──────────────────────────────────────────────────────
+  // Large dirt/earth ground plane
+  var groundMat = new THREE.MeshStandardMaterial({
+    color: 0x8B7355, roughness: 0.95, metalness: 0.0
+  });
+  var ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), groundMat);
+  ground.rotation.x = -Math.PI / 2;
+  ground.receiveShadow = true;
+  ground.position.y = -0.002;
+  scene.add(ground);
+
+  // Darker central pad under van
+  var padMat = new THREE.MeshStandardMaterial({color: 0x6B5A40, roughness: 0.98});
+  var pad = new THREE.Mesh(new THREE.CircleGeometry(4, 32), padMat);
+  pad.rotation.x = -Math.PI / 2;
+  pad.receiveShadow = true;
+  pad.position.y = -0.001;
+  scene.add(pad);
+
+  // ── MOUNTAIN SILHOUETTES ─────────────────────────────────────────
+  function makeMountain(x, z, w, h, col) {
+    var shape = new THREE.Shape();
+    shape.moveTo(-w/2, 0);
+    shape.lineTo(-w*0.3, h*0.4);
+    shape.lineTo(-w*0.1, h*0.7);
+    shape.lineTo(0, h);
+    shape.lineTo(w*0.12, h*0.75);
+    shape.lineTo(w*0.28, h*0.5);
+    shape.lineTo(w/2, 0);
+    shape.lineTo(-w/2, 0);
+    var geo = new THREE.ShapeGeometry(shape);
+    var mat = new THREE.MeshBasicMaterial({color: col, side: THREE.DoubleSide});
+    var m = new THREE.Mesh(geo, mat);
+    m.position.set(x, 0, z);
+    m.rotation.y = Math.random() * 0.3 - 0.15;
+    scene.add(m);
+  }
+
+  // Far mountains (dark, misty)
+  makeMountain(-18, -28, 20, 12, 0x2A3A4A);
+  makeMountain(-4,  -30, 16, 14, 0x1E2D3A);
+  makeMountain(10,  -28, 18, 11, 0x253545);
+  makeMountain(22,  -26, 14, 10, 0x2A3A4A);
+
+  // Mid mountains (slightly lighter)
+  makeMountain(-14, -18, 14, 9,  0x3A4E5C);
+  makeMountain(2,   -20, 12, 10, 0x344858);
+  makeMountain(16,  -17, 13, 8,  0x3A4E5C);
+
+  // Near hills (warmest tone)
+  makeMountain(-10, -12, 10, 5,  0x4A5C45);
+  makeMountain(8,   -11, 9,  6,  0x485A42);
+
+  // ── SKY GRADIENT ────────────────────────────────────────────────
+  var skyGeo = new THREE.SphereGeometry(90, 32, 16);
   var skyMat = new THREE.ShaderMaterial({
     uniforms: {
-      topColor: {value: new THREE.Color(0x0D1117)},
-      bottomColor: {value: new THREE.Color(0x2C2415)},
-      offset: {value: 10},
-      exponent: {value: 0.4}
+      topColor:    {value: new THREE.Color(0x1A2744)},
+      midColor:    {value: new THREE.Color(0xE8733A)},
+      horizColor:  {value: new THREE.Color(0xF0A855)},
+      groundColor: {value: new THREE.Color(0x8B7355)}
     },
     vertexShader: [
-      'varying vec3 vWorldPosition;',
+      'varying vec3 vPos;',
       'void main() {',
-      '  vec4 worldPosition = modelMatrix * vec4(position, 1.0);',
-      '  vWorldPosition = worldPosition.xyz;',
-      '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
+      '  vPos = position;',
+      '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);',
       '}'
     ].join('\n'),
     fragmentShader: [
-      'uniform vec3 topColor;',
-      'uniform vec3 bottomColor;',
-      'uniform float offset;',
-      'uniform float exponent;',
-      'varying vec3 vWorldPosition;',
+      'uniform vec3 topColor, midColor, horizColor, groundColor;',
+      'varying vec3 vPos;',
       'void main() {',
-      '  float h = normalize(vWorldPosition + offset).y;',
-      '  gl_FragColor = vec4(mix(bottomColor, topColor, max(pow(max(h, 0.0), exponent), 0.0)), 1.0);',
+      '  float h = normalize(vPos).y;',
+      '  vec3 col;',
+      '  if (h > 0.15) {',
+      '    col = mix(midColor, topColor, smoothstep(0.15, 0.7, h));',
+      '  } else if (h > -0.05) {',
+      '    col = mix(horizColor, midColor, smoothstep(-0.05, 0.15, h));',
+      '  } else {',
+      '    col = groundColor;',
+      '  }',
+      '  gl_FragColor = vec4(col, 1.0);',
       '}'
     ].join('\n'),
-    side: THREE.BackSide
+    side: THREE.BackSide,
+    depthWrite: false
   });
   scene.add(new THREE.Mesh(skyGeo, skyMat));
 
-  // Remove fog - sky handles depth
-  scene.fog = null;
+  // Subtle fog to blend mountains into distance
+  scene.fog = new THREE.FogExp2(0xC4894A, 0.012);
 
   updateCam();
   animate();
@@ -389,7 +450,7 @@ window.addEventListener('mouseup', function() { drag = false; });
 window.addEventListener('mousemove', function(e) {
   if (!drag) return;
   theta -= (e.clientX - lx) * 0.007;
-  phi = Math.max(0.15, Math.min(Math.PI * 0.72, phi + (e.clientY - ly) * 0.005));
+  phi = Math.max(0.2, Math.min(Math.PI * 0.65, phi + (e.clientY - ly) * 0.005));
   lx = e.clientX; ly = e.clientY; updateCam();
 });
 cv.addEventListener('wheel', function(e) {
@@ -405,7 +466,7 @@ cv.addEventListener('touchmove', function(e) {
   e.preventDefault();
   if (e.touches.length === 1) {
     theta -= (e.touches[0].clientX - tx) * 0.009;
-    phi = Math.max(0.15, Math.min(Math.PI * 0.72, phi + (e.touches[0].clientY - ty) * 0.007));
+    phi = Math.max(0.2, Math.min(Math.PI * 0.65, phi + (e.touches[0].clientY - ty) * 0.007));
     tx = e.touches[0].clientX; ty = e.touches[0].clientY; updateCam();
   } else {
     var d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
@@ -417,7 +478,7 @@ cv.addEventListener('touchmove', function(e) {
 function zoomIn() { radius = Math.max(3, radius - 1); updateCam(); }
 function zoomOut() { radius = Math.min(20, radius + 1); updateCam(); }
 function toggleAuto() { autoRot = !autoRot; document.getElementById('cb-auto').classList.toggle('on', autoRot); }
-function resetCam() { theta = 0.3; phi = 1.1; radius = 9; updateCam(); }
+function resetCam() { theta = 0.3; phi = 1.05; radius = 9; updateCam(); }
 window.addEventListener('resize', resize);
 
 function boot() {
