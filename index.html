@@ -294,16 +294,16 @@ function initPane(k) {
     sun.position.set(6,10,5); sun.castShadow = true;
     sun.shadow.mapSize.set(1024,1024);
     p.scene.add(sun);
-    p.scene.add(Object.assign(new THREE.DirectionalLight(0x8bb4c8,.55),{position:new THREE.Vector3(-5,3,-3)}));
-    p.scene.add(Object.assign(new THREE.DirectionalLight(0xffa060,.4),{position:new THREE.Vector3(0,2,-9)}));
+    var fl=new THREE.DirectionalLight(0x8bb4c8,.55);fl.position.set(-5,3,-3);p.scene.add(fl);
+    var rl=new THREE.DirectionalLight(0xffa060,.4);rl.position.set(0,2,-9);p.scene.add(rl);
     p.scene.add(new THREE.HemisphereLight(0x8bb4c8,0x2C2415,.35));
   } else {
     p.scene.add(new THREE.AmbientLight(0xfff0e0, 1.2));
     var oh = new THREE.DirectionalLight(0xfff5e8, 1.8);
     oh.position.set(0,6,0); oh.castShadow = true;
     p.scene.add(oh);
-    p.scene.add(Object.assign(new THREE.DirectionalLight(0xffe0b0,1.0),{position:new THREE.Vector3(3,2,3)}));
-    p.scene.add(Object.assign(new THREE.DirectionalLight(0xb0d0ff,.5),{position:new THREE.Vector3(-3,1,-2)}));
+    var il=new THREE.DirectionalLight(0xffe0b0,1.0);il.position.set(3,2,3);p.scene.add(il);
+    var il2=new THREE.DirectionalLight(0xb0d0ff,.5);il2.position.set(-3,1,-2);p.scene.add(il2);
     p.scene.add(new THREE.HemisphereLight(0xfff0cc,0x332200,.5));
   }
   var gnd = new THREE.Mesh(
