@@ -195,7 +195,7 @@ footer{padding:2rem 4rem;background:var(--earth);border-top:1px solid rgba(200,1
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
-var theta = 0.3, phi = 1.05, radius = 9;
+var theta = 0.3, phi = 0.9, radius = 9;
 var autoRot = true;
 var drag = false, lx = 0, ly = 0;
 var renderer, scene, camera, target;
@@ -216,10 +216,10 @@ function setup() {
   renderer.setSize(w, h, false);
 
   scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x1A140C, 18, 45);
+
 
   camera = new THREE.PerspectiveCamera(42, w / h, 0.01, 200);
-  target = new THREE.Vector3(0, 1.0, 0);
+  target = new THREE.Vector3(0, 0.7, 0);
 
   // Beach lighting - bright tropical sun
   scene.add(new THREE.AmbientLight(0xFFF5E0, 0.7));
@@ -383,25 +383,29 @@ function loadGLB() {
     function(gltf) {
       var mdl = gltf.scene;
 
-      // Step 1: measure BEFORE any transform (fast - just reads geometry bounds)
+      // Measure raw bounds before any transform
       var box = new THREE.Box3().setFromObject(mdl);
       var size = box.getSize(new THREE.Vector3());
       var centre = box.getCenter(new THREE.Vector3());
-
-      // Step 2: scale to fit 5 units using the longest axis
       var maxDim = Math.max(size.x, size.y, size.z);
       var scl = 5.0 / maxDim;
 
-      // Step 3: centre at origin, sit on ground
-      mdl.position.set(-centre.x * scl, -box.min.y * scl, -centre.z * scl);
+      // Scale the inner mesh
       mdl.scale.set(scl, scl, scl);
+      // Centre XZ, zero Y position on inner mesh
+      mdl.position.set(-centre.x * scl, 0, -centre.z * scl);
 
-      // Step 4: Blender GLB = Z-up, rotate to Y-up + face camera nicely
-      // Wrap in a group to cleanly separate coordinate system fix from display rotation
-      // Inner group fixes Blender Z-up -> Three.js Y-up
+      // Wrap and apply coordinate fix rotation (Blender Z-up -> Three.js Y-up)
       var wrapper = new THREE.Group();
       wrapper.add(mdl);
       mdl.rotation.x = -Math.PI / 2;
+
+      // After rotation, measure actual world bounds and sit on ground
+      scene.add(wrapper);
+      var wb = new THREE.Box3().setFromObject(wrapper);
+      wrapper.position.y = -wb.min.y;
+      scene.remove(wrapper);
+
       mdl = wrapper;
 
       // Step 5: apply colours - parse RGB from material name or match by keyword
@@ -480,7 +484,7 @@ window.addEventListener('mouseup', function() { drag = false; });
 window.addEventListener('mousemove', function(e) {
   if (!drag) return;
   theta -= (e.clientX - lx) * 0.007;
-  phi = Math.max(0.2, Math.min(Math.PI * 0.65, phi + (e.clientY - ly) * 0.005));
+  phi = Math.max(0.25, Math.min(Math.PI * 0.55, phi + (e.clientY - ly) * 0.005));
   lx = e.clientX; ly = e.clientY; updateCam();
 });
 cv.addEventListener('wheel', function(e) {
@@ -496,7 +500,7 @@ cv.addEventListener('touchmove', function(e) {
   e.preventDefault();
   if (e.touches.length === 1) {
     theta -= (e.touches[0].clientX - tx) * 0.009;
-    phi = Math.max(0.2, Math.min(Math.PI * 0.65, phi + (e.touches[0].clientY - ty) * 0.007));
+    phi = Math.max(0.25, Math.min(Math.PI * 0.55, phi + (e.touches[0].clientY - ty) * 0.007));
     tx = e.touches[0].clientX; ty = e.touches[0].clientY; updateCam();
   } else {
     var d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
@@ -508,7 +512,7 @@ cv.addEventListener('touchmove', function(e) {
 function zoomIn() { radius = Math.max(3, radius - 1); updateCam(); }
 function zoomOut() { radius = Math.min(20, radius + 1); updateCam(); }
 function toggleAuto() { autoRot = !autoRot; document.getElementById('cb-auto').classList.toggle('on', autoRot); }
-function resetCam() { theta = 0.3; phi = 1.05; radius = 9; updateCam(); }
+function resetCam() { theta = 0.3; phi = 0.9; radius = 9; updateCam(); }
 window.addEventListener('resize', resize);
 
 function boot() {
