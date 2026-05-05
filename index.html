@@ -283,20 +283,47 @@ function loadGLB() {
       mdl.traverse(function(c) {
         if (c.isMesh) { c.castShadow = true; c.receiveShadow = true; }
       });
-      // Auto-scale and centre the model regardless of original OBJ units
+      // Fix orientation - Blender exports Z-up, Three.js is Y-up
+      mdl.rotation.x = -Math.PI / 2;
+
+      // Auto-scale and centre
       var box = new THREE.Box3().setFromObject(mdl);
       var size = box.getSize(new THREE.Vector3());
-      var centre = box.getCenter(new THREE.Vector3());
       var maxDim = Math.max(size.x, size.y, size.z);
       var scl = 5.0 / maxDim;
       mdl.scale.set(scl, scl, scl);
-      // Recentre after scaling
       box.setFromObject(mdl);
-      centre = box.getCenter(new THREE.Vector3());
+      var centre = box.getCenter(new THREE.Vector3());
       mdl.position.x -= centre.x;
       mdl.position.z -= centre.z;
       mdl.position.y -= box.min.y;
       mdl.rotation.y = Math.PI * 0.12;
+
+      // Apply colours from material names since GLB colour export is grey
+      mdl.traverse(function(c) {
+        if (!c.isMesh) return;
+        var n = c.material ? (c.material.name || '') : '';
+        var nl = n.toLowerCase();
+        var col = null;
+        if (nl.indexOf('white') > -1) col = 0xF5F5F5;
+        else if (nl.indexOf('black') > -1) col = 0x111111;
+        else if (nl.indexOf('oak') > -1) col = 0xC4945A;
+        else if (nl.indexOf('mahogany') > -1 || nl.indexOf('bamboo') > -1) col = 0xC8A96E;
+        else if (nl.indexOf('steel') > -1 || nl.indexOf('satin') > -1) col = 0xAAAAAA;
+        else if (nl.indexOf('oxide') > -1) col = 0x222222;
+        else if (nl.indexOf('blue') > -1) col = 0x4A6FA5;
+        else if (n.indexOf('Opaque(255') > -1) col = 0xF5F5F5;
+        else if (n.indexOf('Opaque(26') > -1 || n.indexOf('Opaque(51') > -1 || n.indexOf('5,5,5') > -1 || n.indexOf('20,20,20') > -1) col = 0x111111;
+        else if (n.indexOf('238,238,238') > -1 || n.indexOf('240,240,240') > -1 || n.indexOf('245,245,245') > -1) col = 0xEEEEEE;
+        else if (n.indexOf('188,75,0') > -1) col = 0xBC4B00;
+        if (col !== null) {
+          c.material = c.material.clone();
+          c.material.color.setHex(col);
+          c.material.roughness = nl.indexOf('gloss') > -1 ? 0.15 : 0.6;
+          c.material.metalness = nl.indexOf('steel') > -1 || nl.indexOf('metal') > -1 ? 0.8 : 0.0;
+          c.material.needsUpdate = true;
+        }
+      });
       scene.add(mdl);
       fill.style.width = '100%';
       resize();
