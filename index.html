@@ -369,7 +369,7 @@ footer{padding:2.5rem 4rem;border-top:1px solid rgba(200,169,110,.07);display:fl
 window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50);});
 
 var renderer,scene,camera,target;
-var theta=0.3,phi=0.88,radius=10;
+var theta=0.3,phi=1.05,radius=10;
 var vanLoaded=false;
 
 function setup(){
@@ -432,8 +432,8 @@ function updateCam(){
 window.addEventListener('scroll',function(){
   var heroH=document.getElementById('hero').offsetHeight;
   var sy=window.scrollY;
-  theta=0.3+(sy/heroH)*Math.PI*3;
-  phi=Math.max(0.65,0.88-(sy/heroH)*0.2);
+  theta=0.3+(sy/heroH)*Math.PI*0.5;
+  phi=Math.max(0.85,1.05-(sy/heroH)*0.15);
   if(vanLoaded)updateCam();
 });
 
@@ -476,8 +476,16 @@ function loadGLB(){
     mdl.traverse(function(c){
       if(!c.isMesh)return;c.castShadow=true;c.receiveShadow=true;
       var n=c.material?(c.material.name||''):'';
-      if(!mc[n]){var p=parseMatColor(n);if(p){var m=c.material.clone();m.color.setHex(p.hex);m.roughness=p.rough;m.metalness=p.metal;m.needsUpdate=true;mc[n]=m;}else mc[n]=c.material;}
+      if(!mc[n]){var p=parseMatColor(n);if(p){var m=c.material.clone();m.color.setHex(p.hex);m.roughness=p.rough;m.metalness=p.metal;m.side=THREE.DoubleSide;m.needsUpdate=true;mc[n]=m;}else{var m2=c.material.clone();m2.side=THREE.DoubleSide;m2.needsUpdate=true;mc[n]=m2;}}
       c.material=mc[n];
+    });
+    // Force black on fridge and induction cooktop
+    mdl.traverse(function(c){
+      if(!c.isMesh)return;
+      var n=(c.material?c.material.name:'')||'';var nl=n.toLowerCase();
+      if(nl.indexOf('fridge')>-1||nl.indexOf('compressor')>-1||nl.indexOf('induction')>-1||nl.indexOf('cooktop')>-1||nl.indexOf('bushman')>-1){
+        c.material=c.material.clone();c.material.color.setHex(0x111111);c.material.roughness=0.3;c.material.metalness=0.6;c.material.needsUpdate=true;
+      }
     });
     scene.add(w);vanLoaded=true;fill.style.width='100%';resize();renderer.render(scene,camera);
     setTimeout(function(){ov.classList.add('gone');resize();},600);
