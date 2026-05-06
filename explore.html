@@ -241,10 +241,20 @@ function loadGLB(){
       if(!c.isMesh)return;
       c.castShadow=true;c.receiveShadow=true;
       var n=c.material?(c.material.name||''):'';
-      if(!matCache[n]){var p=parseMatColor(n);if(p){var m=c.material.clone();m.color.setHex(p.hex);m.roughness=p.rough;m.metalness=p.metal;m.needsUpdate=true;matCache[n]=m;}else matCache[n]=c.material;}
+      if(!matCache[n]){var p=parseMatColor(n);if(p){var m=c.material.clone();m.color.setHex(p.hex);m.roughness=p.rough;m.metalness=p.metal;m.side=THREE.DoubleSide;m.needsUpdate=true;matCache[n]=m;}else{var m2=c.material.clone();m2.side=THREE.DoubleSide;m2.needsUpdate=true;matCache[n]=m2;}}
       c.material=matCache[n];
     });
     scene.add(wrapper);
+    // Force black on fridge and blue panels
+    wrapper.traverse(function(c){
+      if(!c.isMesh)return;
+      var n=(c.material?c.material.name:'')||'';var nl=n.toLowerCase();
+      var hex=c.material.color?c.material.color.getHex():0;
+      if(nl.indexOf('bushman')>-1||nl.indexOf('fridge')>-1||hex===0x2030A0||hex===0x006994){
+        c.material=c.material.clone();c.material.color.setHex(0x111111);
+        c.material.roughness=0.3;c.material.metalness=0.5;c.material.needsUpdate=true;
+      }
+    });
     fill.style.width='100%';
     resize();renderer.render(scene,camera);
     setTimeout(function(){
