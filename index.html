@@ -266,7 +266,7 @@ footer{padding:2.5rem 4rem;border-top:1px solid rgba(200,169,110,.07);display:fl
         <a href="explore.html" class="about-link">Explore the full build in 3D &rarr;</a>
       </div>
       <div class="stat-grid">
-        <div class="stat"><div class="stat-n">200<span class="stat-u">Ah</span></div><p class="stat-l">LiFePO&#8322; Battery</p></div>
+        <div class="stat"><div class="stat-n">240<span class="stat-u">Ah</span></div><p class="stat-l">LiFePO&#8322; Battery</p></div>
         <div class="stat"><div class="stat-n">400<span class="stat-u">W</span></div><p class="stat-l">Solar Input</p></div>
         <div class="stat"><div class="stat-n">12<span class="stat-u">wk</span></div><p class="stat-l">Build Time</p></div>
         <div class="stat"><div class="stat-n">10<span class="stat-u">/yr</span></div><p class="stat-l">Builds Per Year</p></div>
@@ -284,8 +284,8 @@ footer{padding:2.5rem 4rem;border-top:1px solid rgba(200,169,110,.07);display:fl
       <h2 class="sec-title">Every detail<br><em>considered</em></h2>
     </div>
     <div class="feat-grid">
-      <div class="feat"><p class="feat-n">01</p><h3 class="feat-t">Off-Grid Electrical</h3><p class="feat-d">LiFePO&#8322; lithium batteries, dual solar input, MPPT controller, and a full 240V inverter. Weeks of power without a plug.</p></div>
-      <div class="feat"><p class="feat-n">02</p><h3 class="feat-t">Full Kitchen</h3><p class="feat-d">Induction cooktop, 12V compressor fridge, oak benchtop, and storage designed around how people actually cook on the road.</p></div>
+      <div class="feat"><p class="feat-n">01</p><h3 class="feat-t">Off-Grid Electrical</h3><p class="feat-d">240Ah LiFePO&#8322; lithium battery, 400W solar, Projecta BMS and a 3000W inverter. Weeks of off-grid power without a plug.</p></div>
+      <div class="feat"><p class="feat-n">02</p><h3 class="feat-t">Full Kitchen</h3><p class="feat-d">Dual induction cooktop, Kings 85L upright fridge/freezer, timber benchtops and smart storage designed around how people actually cook on the road.</p></div>
       <div class="feat"><p class="feat-n">03</p><h3 class="feat-t">Hot Shower</h3><p class="feat-d">On-demand hot water, discreet wet bath or outdoor shower connection. Comfort wherever you are.</p></div>
       <div class="feat"><p class="feat-n">04</p><h3 class="feat-t">Custom Cabinetry</h3><p class="feat-d">Handbuilt linen-finish cabinetry with birch ply edges. Every drawer, door, and shelf made for your needs.</p></div>
       <div class="feat"><p class="feat-n">05</p><h3 class="feat-t">Climate Control</h3><p class="feat-d">Spray foam and rigid board insulation throughout. Built for Australian conditions — highlands, coast, and outback.</p></div>
@@ -305,10 +305,10 @@ footer{padding:2.5rem 4rem;border-top:1px solid rgba(200,169,110,.07);display:fl
         <p class="specs-intro">Every specification is a deliberate choice. Nothing is standard. Everything is selected for the Australian environment and the demands of extended off-grid travel.</p>
       </div>
       <div class="specs-table">
-        <div class="spec"><div class="spec-v">200<span class="spec-u">Ah</span></div><p class="spec-k">LiFePO&#8322; Battery</p></div>
+        <div class="spec"><div class="spec-v">240<span class="spec-u">Ah</span></div><p class="spec-k">LiFePO&#8322; Battery</p></div>
         <div class="spec"><div class="spec-v">400<span class="spec-u">W</span></div><p class="spec-k">Solar Panels</p></div>
         <div class="spec"><div class="spec-v">3<span class="spec-u">kW</span></div><p class="spec-k">Inverter Output</p></div>
-        <div class="spec"><div class="spec-v">60<span class="spec-u">L</span></div><p class="spec-k">Fresh Water</p></div>
+        <div class="spec"><div class="spec-v">40<span class="spec-u">L</span></div><p class="spec-k">Fresh Water</p></div>
         <div class="spec"><div class="spec-v">12<span class="spec-u">wk</span></div><p class="spec-k">Build Time</p></div>
         <div class="spec"><div class="spec-v">100<span class="spec-u">%</span></div><p class="spec-k">Custom to You</p></div>
       </div>
@@ -537,6 +537,12 @@ function loadGLB(){
       if(nl.indexOf('fridge')>-1||nl.indexOf('compressor')>-1||nl.indexOf('induction')>-1||nl.indexOf('cooktop')>-1||nl.indexOf('bushman')>-1){
         c.material=c.material.clone();c.material.color.setHex(0x111111);c.material.roughness=0.3;c.material.metalness=0.6;c.material.needsUpdate=true;
       }
+    });
+    // Final pass - force DoubleSide on every mesh no exceptions
+    w.traverse(function(c){
+      if(!c.isMesh||!c.material)return;
+      c.material.side=THREE.DoubleSide;
+      c.material.needsUpdate=true;
     });
     scene.add(w);vanLoaded=true;fill.style.width='100%';resize();renderer.render(scene,camera);
     setTimeout(function(){ov.classList.add('gone');resize();},600);
