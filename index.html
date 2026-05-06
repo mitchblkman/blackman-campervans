@@ -151,16 +151,54 @@ footer{padding:2.5rem 4rem;border-top:1px solid rgba(200,169,110,.07);display:fl
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:.85}}
 
+/* HAMBURGER */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:.3rem;background:none;border:none;z-index:110}
+.hamburger span{display:block;width:22px;height:1px;background:var(--white);transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+/* MOBILE MENU */
+#mobile-menu{
+  display:none;position:fixed;inset:0;z-index:105;
+  background:rgba(7,12,18,.98);backdrop-filter:blur(20px);
+  flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;
+  opacity:0;transition:opacity .3s;
+}
+#mobile-menu.open{display:flex;opacity:1}
+#mobile-menu a{
+  font-size:1.6rem;font-family:'Cormorant Garamond',serif;font-weight:300;
+  letter-spacing:.12em;color:var(--white);text-decoration:none;
+  transition:color .3s;
+}
+#mobile-menu a:hover{color:var(--gold)}
+#mobile-menu .menu-cta{
+  font-family:'Montserrat',sans-serif;font-size:.7rem;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--gold);
+  border:1px solid rgba(200,169,110,.4);padding:.8rem 2rem;margin-top:1rem;
+}
+#mobile-menu .menu-close{
+  position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;
+  color:var(--grey);font-size:1.5rem;cursor:pointer;padding:.5rem;
+}
+
 /* ── RESPONSIVE ── */
 @media(max-width:960px){
-  #nav{padding:1.2rem 1.5rem}#nav.scrolled{padding:.9rem 1.5rem}
-  .nav-links,.nav-cta{display:none}
+  #nav{padding:1rem 1.5rem}#nav.scrolled{padding:.8rem 1.5rem}
+  .nav-links{display:none}
+  .nav-cta{display:none}
+  .hamburger{display:flex}
   .inner{padding:0 1.5rem}
-  #about{padding:5rem 0}.about-grid{grid-template-columns:1fr;gap:3rem}
-  #features{padding:5rem 0}.feat-grid{grid-template-columns:1fr}
+  #about{padding:4rem 0}.about-grid{grid-template-columns:1fr;gap:2.5rem}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .stat{padding:1.8rem 1.2rem}
+  .stat-n{font-size:2.4rem}
+  #features{padding:4rem 0}.feat-grid{grid-template-columns:1fr}
+  .feat{padding:2rem 1.5rem}
   #specs{padding:5rem 0}.specs-layout{grid-template-columns:1fr;gap:3rem}.specs-sticky{position:static}
   #explore-cta{padding:4rem 0}.explore-band{flex-direction:column;text-align:center}
-  #testimonials{padding:5rem 0}.test-grid{grid-template-columns:1fr}
+  #testimonials{padding:4rem 0}.test-grid{grid-template-columns:1fr}
+  .test-card{padding:2rem 1.5rem}
   #process{padding:5rem 0}.proc-steps{grid-template-columns:repeat(2,1fr);gap:2.5rem}.proc-steps::before{display:none}
   #cta{padding:6rem 0}
   footer{padding:2rem 1.5rem;flex-direction:column;text-align:center}.foot-links{justify-content:center}
@@ -179,7 +217,20 @@ footer{padding:2.5rem 4rem;border-top:1px solid rgba(200,169,110,.07);display:fl
     <li><a href="#process">Process</a></li>
   </ul>
   <a href="mailto:hello@blackmansvans.com.au" class="nav-cta">Enquire</a>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div id="mobile-menu">
+  <button class="menu-close" onclick="toggleMenu()">&times;</button>
+  <a href="#about" onclick="toggleMenu()">About</a>
+  <a href="forsale.html">For Sale</a>
+  <a href="explore.html">Explore the Build</a>
+  <a href="#testimonials" onclick="toggleMenu()">Reviews</a>
+  <a href="#process" onclick="toggleMenu()">Process</a>
+  <a href="mailto:hello@blackmansvans.com.au" class="menu-cta">Enquire Now</a>
+</div>
 
 <section id="hero">
   <canvas id="three-canvas"></canvas>
@@ -493,6 +544,14 @@ function loadGLB(){
   function(err){document.getElementById('load-overlay').querySelector('.load-tagline').textContent='Error loading model';console.error(err);});
 }
 window.addEventListener('resize',resize);
+function toggleMenu(){
+  var menu=document.getElementById('mobile-menu');
+  var ham=document.getElementById('hamburger');
+  var open=menu.classList.toggle('open');
+  ham.classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+
 function boot(){if(typeof THREE==='undefined'||typeof THREE.GLTFLoader==='undefined'){setTimeout(boot,50);return;}setup();}
 boot();
 </script>

@@ -113,8 +113,11 @@ footer{padding:2rem 4rem;border-top:1px solid rgba(200,169,110,.07);display:flex
 
 @media(max-width:900px){
   #nav{padding:.9rem 1.5rem}.nav-links,.nav-cta{display:none}
+  #hamburger{display:flex!important}
   .page-header{padding:7rem 1.5rem 3rem}.filter-bar{padding:1.2rem 1.5rem}
   .listings{padding:1px;grid-template-columns:1fr}
+  .listing-body{padding:1.5rem}
+  .listing-specs{gap:1rem}
   .bottom-cta{padding:4rem 1.5rem}
   footer{padding:2rem 1.5rem;flex-direction:column;text-align:center}.foot-links{justify-content:center}
   .form-grid{grid-template-columns:1fr}
@@ -133,7 +136,19 @@ footer{padding:2rem 4rem;border-top:1px solid rgba(200,169,110,.07);display:flex
     <li><a href="index.html#testimonials">Reviews</a></li>
   </ul>
   <a href="mailto:hello@blackmansvans.com.au" class="nav-cta">Enquire</a>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" style="display:none;flex-direction:column;gap:5px;cursor:pointer;padding:.3rem;background:none;border:none">
+    <span style="display:block;width:22px;height:1px;background:#F4F1EC"></span>
+    <span style="display:block;width:22px;height:1px;background:#F4F1EC"></span>
+    <span style="display:block;width:22px;height:1px;background:#F4F1EC"></span>
+  </button>
 </nav>
+<div id="mobile-menu" style="display:none;position:fixed;inset:0;z-index:105;background:rgba(7,12,18,.98);flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;opacity:0;transition:opacity .3s">
+  <button onclick="toggleMenu()" style="position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:#8A9BAD;font-size:1.5rem;cursor:pointer">&times;</button>
+  <a href="index.html" style="font-size:1.6rem;font-family:'Cormorant Garamond',serif;font-weight:300;color:#F4F1EC;text-decoration:none">Home</a>
+  <a href="forsale.html" style="font-size:1.6rem;font-family:'Cormorant Garamond',serif;font-weight:300;color:#C8A96E;text-decoration:none">For Sale</a>
+  <a href="explore.html" style="font-size:1.6rem;font-family:'Cormorant Garamond',serif;font-weight:300;color:#F4F1EC;text-decoration:none">3D Explorer</a>
+  <a href="mailto:hello@blackmansvans.com.au" style="font-family:'Montserrat',sans-serif;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:#C8A96E;border:1px solid rgba(200,169,110,.4);padding:.8rem 2rem;text-decoration:none">Enquire Now</a>
+</div>
 
 <div class="page-header">
   <p class="page-label">Ex-Hire &amp; Build Overruns</p>
@@ -270,6 +285,13 @@ footer{padding:2rem 4rem;border-top:1px solid rgba(200,169,110,.07);display:flex
 </footer>
 
 <script>
+function toggleMenu(){
+  var menu=document.getElementById('mobile-menu');
+  var open=!menu.style.display||menu.style.display==='none'||menu.style.display==='flex'?menu.style.display!=='flex':false;
+  menu.style.display=open?'none':'flex';
+  menu.style.opacity=open?'0':'1';
+  document.body.style.overflow=open?'':'hidden';
+}
 var uploadedImages=[];
 
 function filterListings(status){
